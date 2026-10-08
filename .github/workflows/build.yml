@@ -35,7 +35,9 @@ jobs:
           gradle assembleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }
 
       - name: Готовый файл
-        run: cp app/build/outputs/apk/release/*.apk NeonPulse.apk
+        run: |
+          cp app/build/outputs/apk/release/*.apk NeonPulse.apk
+          if [ -n "$NP_KEYSTORE" ]; then echo "::notice title=sign::release"; else echo "::warning title=sign::debug"; fi
 
       - uses: actions/upload-artifact@v4
         with:
