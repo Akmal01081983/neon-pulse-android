@@ -53,6 +53,29 @@ object HealthSync {
     private fun setStatus(ctx: Context, s: String) = prefs(ctx).edit().putString("last", s).apply()
     fun validToken(t: String) = Regex("^[a-z0-9]{32}$").matches(t.trim().lowercase())
 
+    // ===== Вход через Telegram: одноразовый код → бот → забираем ключ =====
+    const val PAIR = "https://akmalparpiev.app.n8n.cloud/webhook/app-pair"
+    fun newNonce(ctx: Context): String {
+        val abc = "abcdefghijklmnopqrstuvwxyz0123456789"
+        val rnd = java.security.SecureRandom()
+        val n = (1..24).map { abc[rnd.nextInt(abc.length)] }.joinToString("")
+        prefs(ctx).edit().putString("nonce", n).apply()
+        return n
+    }
+    fun nonce(ctx: Context): String? = prefs(ctx).getString("nonce", null)
+    /** Спрашиваем сервер: нажал ли человек START в боте. Да — сохраняем ключ. */
+    fun claim(ctx: Context): Boolean {
+        val n = nonce(ctx) ?: return false
+        return try {
+            val conn = URL("$PAIR?n=$n").openConnection() as HttpURLConnection
+            conn.connectTimeout = 10000; conn.readTimeout = 15000
+            val txt = conn.inputStream.bufferedReader().use { it.readText() }
+            conn.disconnect()
+            val t = JSONObject(txt).optString("token", "")
+            if (validToken(t)) { setToken(ctx, t); prefs(ctx).edit().remove("nonce").apply(); true } else false
+        } catch (e: Exception) { false }
+    }
+
     private suspend fun <T : Record> readAll(c: HealthConnectClient, type: KClass<T>, from: Instant, to: Instant): List<T> {
         val out = mutableListOf<T>()
         var page: String? = null
