@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "uz.neonpulse.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "uz.neonpulse.app"
