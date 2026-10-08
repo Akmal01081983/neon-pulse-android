@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Значок: неоновое кольцо с линией пульса -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:strokeColor="#19E3FF" android:strokeWidth="5" android:fillColor="#00000000"
+        android:pathData="M54,28a26,26 0,1 1,0 52a26,26 0,1 1,0 -52z" />
+    <path android:strokeColor="#FF2FD1" android:strokeWidth="4" android:fillColor="#00000000" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M36,56 L46,56 L50,46 L56,66 L61,52 L64,56 L72,56" />
+</vector>

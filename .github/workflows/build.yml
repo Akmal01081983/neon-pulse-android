@@ -1,0 +1,51 @@
+# Сборка APK при каждом push в main и публикация в релиз «latest»
+name: Build APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Ключ подписи (если задан в Secrets)
+        env:
+          KS: ${{ secrets.NP_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KS" ]; then echo "$KS" | base64 -d > $RUNNER_TEMP/np.jks; echo "NP_KEYSTORE=$RUNNER_TEMP/np.jks" >> $GITHUB_ENV; fi
+
+      - name: Сборка
+        env:
+          NP_STORE_PASS: ${{ secrets.NP_STORE_PASS }}
+          NP_KEY_ALIAS: ${{ secrets.NP_KEY_ALIAS }}
+          NP_KEY_PASS: ${{ secrets.NP_KEY_PASS }}
+        run: gradle assembleRelease --no-daemon
+
+      - name: Готовый файл
+        run: cp app/build/outputs/apk/release/*.apk NeonPulse.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NeonPulse
+          path: NeonPulse.apk
+
+      - name: Релиз
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Neon Pulse ${{ github.run_number }}
+          make_latest: true
+          files: NeonPulse.apk
