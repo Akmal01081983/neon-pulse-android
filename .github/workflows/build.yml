@@ -30,8 +30,6 @@ jobs:
       - name: Сборка
         env:
           NP_STORE_PASS: ${{ secrets.NP_STORE_PASS }}
-          NP_KEY_ALIAS: ${{ secrets.NP_KEY_ALIAS }}
-          NP_KEY_PASS: ${{ secrets.NP_KEY_PASS }}
         run: |
           set -o pipefail
           gradle assembleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }

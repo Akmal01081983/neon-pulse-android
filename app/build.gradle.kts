@@ -22,8 +22,8 @@ android {
         if (ks != null) create("release") {
             storeFile = file(ks)
             storePassword = System.getenv("NP_STORE_PASS")
-            keyAlias = System.getenv("NP_KEY_ALIAS")
-            keyPassword = System.getenv("NP_KEY_PASS")
+            keyAlias = System.getenv("NP_KEY_ALIAS") ?: "neon"
+            keyPassword = System.getenv("NP_KEY_PASS") ?: System.getenv("NP_STORE_PASS")
         }
     }
     buildTypes {
