@@ -1,5 +1,6 @@
 {
  "squat_bw": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@6a7cde1e2fb5c953e080a26c14303a2c6fd87cfa/media/squat_bw.mp4",
  "squat": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@8ff8b4363ca939b2a43edb5942770a3392f73798/media/squat.mp4",
- "goblet": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@aea39b0f054537336e2e0d9aa84f6cfd246f52c2/media/goblet.mp4"
+ "goblet": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@aea39b0f054537336e2e0d9aa84f6cfd246f52c2/media/goblet.mp4",
+ "lunge_bw": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@2de574c4c5701981d207b0e3dfd4eea423a5043a/media/lunge_bw.mp4"
 }
