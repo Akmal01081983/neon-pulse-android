@@ -49,6 +49,19 @@ jobs:
           name: NeonPulse
           path: NeonPulse.apk
 
+      # Pull request: тестовая версия по прямой ссылке …/releases/download/test/NeonPulse.apk
+      # (предварительный выпуск, не «latest» — ссылка в боте продолжает отдавать рабочую версию)
+      - name: Тестовая версия для проверки
+        if: github.event_name == 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: test
+          name: Neon Pulse — тестовая версия
+          prerelease: true
+          make_latest: false
+          target_commitish: ${{ github.event.pull_request.head.sha }}
+          files: NeonPulse.apk
+
       - name: Релиз
         if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
