@@ -32,6 +32,13 @@ import kotlin.reflect.KClass
 object HealthSync {
     const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
     const val BOT = "https://t.me/WHOOP_Neon_bot"
+    const val HOST = "akmalparpiev.app.n8n.cloud"
+    /** Мини-приложение Neon (то же, что «📱 Neon» в Telegram) на нужной вкладке; ключ страницы — md5 от ключа приложения */
+    fun appUrl(ctx: Context, tab: String): String? {
+        val t = token(ctx) ?: return null
+        val k = java.security.MessageDigest.getInstance("MD5").digest(t.toByteArray()).joinToString("") { "%02x".format(it) }
+        return "https://$HOST/webhook/health-app?k=$k&tab=$tab"
+    }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
 
     /** Какие данные читаем — только чтение */

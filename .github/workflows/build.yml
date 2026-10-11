@@ -1,7 +1,11 @@
-# Сборка APK при каждом push в main и публикация в релиз «latest»
+# Сборка APK при каждом push в main и публикация в релиз «latest».
+# Pull request в main — только сборка для проверки (APK в артефактах), пользователям ничего не публикуется
 name: Build APK
 on:
   push:
+    branches: [main]
+    paths-ignore: ['media/**']
+  pull_request:
     branches: [main]
     paths-ignore: ['media/**']
   workflow_dispatch:
@@ -46,6 +50,7 @@ jobs:
           path: NeonPulse.apk
 
       - name: Релиз
+        if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}

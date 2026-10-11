@@ -3,6 +3,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Камера — только для проверки техники в тренере (спрашиваем, когда человек её включает) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- Только чтение: приложение ничего не записывает в Health Connect -->
     <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
     <uses-permission android:name="android.permission.health.READ_RESTING_HEART_RATE" />
@@ -50,6 +53,13 @@
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
+
+        <!-- Тренер: мини-приложение Neon на вкладке «Тренер» -->
+        <activity
+            android:name=".CoachActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="Тренер Neon" />
 
         <!-- Android 14+: экран «как приложение использует данные» -->
         <activity-alias

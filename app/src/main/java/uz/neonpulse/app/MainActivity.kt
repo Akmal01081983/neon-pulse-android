@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var title: TextView
     private lateinit var info: TextView
     private lateinit var mainBtn: Button
+    private lateinit var second: TextView
     private lateinit var extra: LinearLayout
     private var busy = false
 
@@ -93,11 +94,12 @@ class MainActivity : ComponentActivity() {
             }
             return
         }
-        // 4. Готово
+        // 4. Готово: тренер прямо в приложении, бот — второй кнопкой
         SyncWorker.schedule(this)
-        show("✅ Всё готово", "Данные отправляются сами. Отчёт приходит в Telegram каждое утро.\n\n" + HealthSync.lastStatus(this), "Открыть бота") {
-            openUrl(HealthSync.BOT)
+        show("✅ Всё готово", "Данные отправляются сами. Отчёт приходит в Telegram каждое утро.\n\n" + HealthSync.lastStatus(this), "🏋️ Тренер") {
+            startActivity(Intent(this, CoachActivity::class.java))
         }
+        second.visibility = View.VISIBLE
     }
 
     private suspend fun hasAccess(): Boolean {
@@ -117,7 +119,7 @@ class MainActivity : ComponentActivity() {
 
     // ===== Интерфейс =====
     private fun show(t: String, i: String, btn: String?, on: (() -> Unit)? = null) {
-        title.text = t; info.text = i
+        title.text = t; info.text = i; second.visibility = View.GONE
         mainBtn.visibility = if (btn == null) View.GONE else View.VISIBLE
         if (btn != null) { mainBtn.text = btn; mainBtn.setOnClickListener { on?.invoke() } }
     }
@@ -139,7 +141,13 @@ class MainActivity : ComponentActivity() {
             background = GradientDrawable().apply { setColor(NEON); cornerRadius = dp(14).toFloat() }
             layoutParams = LinearLayout.LayoutParams(-1, dp(56))
         }
-        root.addView(title); root.addView(info); root.addView(mainBtn)
+        // Вторая кнопка на экране «Всё готово» — открыть бота
+        second = TextView(this).apply {
+            text = "Открыть бота в Telegram"; setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER; setPadding(0, dp(18), 0, dp(6)); visibility = View.GONE
+            setOnClickListener { openUrl(HealthSync.BOT) }
+        }
+        root.addView(title); root.addView(info); root.addView(mainBtn); root.addView(second)
 
         // Запасной вариант — ключ вручную (скрыт под ссылкой)
         extra = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, dp(28), 0, 0) }
