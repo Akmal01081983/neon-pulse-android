@@ -31,7 +31,7 @@ import kotlin.reflect.KClass
 /** Чтение данных из Health Connect и отправка в бот (формат совпадает с приёмом Android в n8n — WF13). */
 object HealthSync {
     const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
-    const val BOT = "https://t.me/WHOOP_Neon_bot"
+    const val BOT = "https://t.me/Neonpuls_bot"
     const val HOST = "akmalparpiev.app.n8n.cloud"
     /** Мини-приложение Neon (то же, что «📱 Neon» в Telegram) на нужной вкладке; ключ страницы — md5 от ключа приложения */
     fun appUrl(ctx: Context, tab: String): String? {
