@@ -32,6 +32,13 @@ import kotlin.reflect.KClass
 object HealthSync {
     const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
     const val BOT = "https://t.me/WHOOP_Neon_bot"
+    const val HOST = "akmalparpiev.app.n8n.cloud"
+    /** Мини-приложение Neon (то же, что «📱 Neon» в Telegram) на нужной вкладке; ключ страницы — md5 от ключа приложения */
+    fun appUrl(ctx: Context, tab: String): String? {
+        val t = token(ctx) ?: return null
+        val k = java.security.MessageDigest.getInstance("MD5").digest(t.toByteArray()).joinToString("") { "%02x".format(it) }
+        return "https://$HOST/webhook/health-app?k=$k&tab=$tab"
+    }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
 
     /** Какие данные читаем — только чтение */
@@ -43,13 +50,17 @@ object HealthSync {
     )
     val PERMISSIONS: Set<String> = TYPES.map { HealthPermission.getReadPermission(it) }.toSet() + BACKGROUND
 
+    /** Язык телефона узбекский — тексты на узбекском (латиница), иначе по-русски */
+    fun uz(ctx: Context) = ctx.resources.configuration.locales[0].language == "uz"
+    fun tr(ctx: Context, ru: String, uz: String) = if (uz(ctx)) uz else ru
+
     fun available(ctx: Context) = HealthConnectClient.getSdkStatus(ctx) == HealthConnectClient.SDK_AVAILABLE
 
     // ===== Настройки (ключ из бота и итог последней отправки) =====
     private fun prefs(ctx: Context) = ctx.getSharedPreferences("neon", Context.MODE_PRIVATE)
     fun token(ctx: Context): String? = prefs(ctx).getString("token", null)
     fun setToken(ctx: Context, t: String) = prefs(ctx).edit().putString("token", t.trim().lowercase()).apply()
-    fun lastStatus(ctx: Context): String = prefs(ctx).getString("last", "Ещё не отправляли") ?: ""
+    fun lastStatus(ctx: Context): String = prefs(ctx).getString("last", tr(ctx, "Ещё не отправляли", "Hali yuborilmagan")) ?: ""
     private fun setStatus(ctx: Context, s: String) = prefs(ctx).edit().putString("last", s).apply()
     fun validToken(t: String) = Regex("^[a-z0-9]{32}$").matches(t.trim().lowercase())
 
@@ -92,11 +103,11 @@ object HealthSync {
      * Автоматически утром (до 12:00) ждём, пока закончится сон, иначе отчёт уйдёт с неполной ночью.
      */
     suspend fun run(ctx: Context, manual: Boolean): Boolean {
-        val token = token(ctx) ?: run { setStatus(ctx, "Нет ключа — подключитесь из бота"); return false }
-        if (!available(ctx)) { setStatus(ctx, "Health Connect не установлен"); return false }
+        val token = token(ctx) ?: run { setStatus(ctx, tr(ctx, "Нет ключа — подключитесь из бота", "Kalit yoʻq — botdan ulaning")); return false }
+        if (!available(ctx)) { setStatus(ctx, tr(ctx, "Health Connect не установлен", "Health Connect oʻrnatilmagan")); return false }
         val c = HealthConnectClient.getOrCreate(ctx)
         val granted = c.permissionController.getGrantedPermissions()
-        if (!granted.containsAll(PERMISSIONS - BACKGROUND)) { setStatus(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»"); return false }
+        if (!granted.containsAll(PERMISSIONS - BACKGROUND)) { setStatus(ctx, tr(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»", "Maʼlumotlarga ruxsat yoʻq — «Ruxsat berish» ni bosing")); return false }
 
         val now = Instant.now()
         val from = now.minus(Duration.ofHours(26))
@@ -104,7 +115,7 @@ object HealthSync {
         val local = ZonedDateTime.now(ZoneId.systemDefault())
         val dayStart = local.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant()
         val sleptToday = sleep.any { it.endTime.isAfter(dayStart) && it.endTime.isBefore(now.minus(Duration.ofMinutes(20))) }
-        if (!manual && local.hour < 12 && !sleptToday) { setStatus(ctx, "Жду окончания сна — ${local.toLocalTime().withNano(0)}"); return false }
+        if (!manual && local.hour < 12 && !sleptToday) { setStatus(ctx, tr(ctx, "Жду окончания сна", "Uyqu tugashini kutyapman") + " — ${local.toLocalTime().withNano(0)}"); return false }
 
         val body = JSONObject()
         body.put("heart_rate", JSONArray().apply {
@@ -158,10 +169,10 @@ object HealthSync {
             val code = conn.responseCode
             conn.disconnect()
             val ok = code in 200..299
-            setStatus(ctx, (if (ok) "✅ Отправлено" else "⚠️ Ошибка сервера $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
+            setStatus(ctx, (if (ok) tr(ctx, "✅ Отправлено", "✅ Yuborildi") else tr(ctx, "⚠️ Ошибка сервера", "⚠️ Server xatosi") + " $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
             ok
         } catch (e: Exception) {
-            setStatus(ctx, "⚠️ Нет интернета — повторю позже")
+            setStatus(ctx, tr(ctx, "⚠️ Нет интернета — повторю позже", "⚠️ Internet yoʻq — keyinroq qayta urinaman"))
             false
         }
     }

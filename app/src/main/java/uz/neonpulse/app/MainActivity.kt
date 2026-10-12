@@ -29,6 +29,8 @@ import kotlinx.coroutines.withContext
  * «Подключить» → Telegram (START) → назад → «Разрешить все» → готово, дальше само.
  */
 class MainActivity : ComponentActivity() {
+    /** Текст на языке телефона: узбекский или русский */
+    private fun t(ru: String, uz: String) = HealthSync.tr(this, ru, uz)
     private val NEON = Color.parseColor("#00F5D4")
     private val BG = Color.parseColor("#0B0F14")
     private val CARD = Color.parseColor("#151B23")
@@ -37,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var title: TextView
     private lateinit var info: TextView
     private lateinit var mainBtn: Button
+    private lateinit var second: TextView
     private lateinit var extra: LinearLayout
     private var busy = false
 
@@ -65,13 +68,14 @@ class MainActivity : ComponentActivity() {
         if (busy) return
         // 1. Нет ключа: если уже ходили в Telegram — забираем ключ (сервер мог ответить не сразу)
         if (HealthSync.token(this) == null && HealthSync.nonce(this) != null) {
-            show("Подключаю…", "Проверяю Telegram", null)
+            show(t("Подключаю…", "Ulanmoqda…"), t("Проверяю Telegram", "Telegramni tekshiryapman"), null)
             busy = true
             repeat(8) { if (HealthSync.token(this) == null && !withContext(Dispatchers.IO) { HealthSync.claim(this@MainActivity) }) delay(1500) }
             busy = false
         }
         if (HealthSync.token(this) == null) {
-            show("Neon Pulse", "Сон, восстановление и нагрузка с ваших часов — каждое утро в Telegram.\n\nНажмите кнопку, в Telegram нажмите «Старт» (START) и вернитесь сюда.", "Подключить через Telegram") {
+            show("Neon Pulse", t("Сон, восстановление и нагрузка с ваших часов — каждое утро в Telegram.\n\nНажмите кнопку, в Telegram нажмите «Старт» (START) и вернитесь сюда.",
+                "Soatingizdan uyqu, tiklanish va yuklama — har tong Telegramda.\n\nTugmani bosing, Telegramda «Старт» (START) ni bosing va bu yerga qayting."), t("Подключить через Telegram", "Telegram orqali ulash")) {
                 val n = HealthSync.newNonce(this)
                 openUrl("https://t.me/WHOOP_Neon_bot?start=app_$n")
             }
@@ -81,23 +85,24 @@ class MainActivity : ComponentActivity() {
         extra.visibility = View.GONE
         // 2. Health Connect
         if (!HealthSync.available(this)) {
-            show("Нужен Health Connect", "Это бесплатное приложение Google, через него часы делятся данными.", "Установить Health Connect") {
+            show(t("Нужен Health Connect", "Health Connect kerak"), t("Это бесплатное приложение Google, через него часы делятся данными.", "Bu Google ning bepul ilovasi, soat maʼlumotlarni u orqali ulashadi."), t("Установить Health Connect", "Health Connect ni oʻrnatish")) {
                 openUrl("market://details?id=com.google.android.apps.healthdata")
             }
             return
         }
         // 3. Доступ к данным
         if (!hasAccess()) {
-            show("Последний шаг", "Разрешите читать данные часов. Нажмите «Разрешить все» — мы только читаем, ничего не меняем.", "Разрешить доступ") {
+            show(t("Последний шаг", "Oxirgi qadam"), t("Разрешите читать данные часов. Нажмите «Разрешить все» — мы только читаем, ничего не меняем.", "Soat maʼlumotlarini oʻqishga ruxsat bering. «Разрешить все» ni bosing — biz faqat oʻqiymiz, hech narsani oʻzgartirmaymiz."), t("Разрешить доступ", "Ruxsat berish")) {
                 permLauncher.launch(HealthSync.PERMISSIONS)
             }
             return
         }
-        // 4. Готово
+        // 4. Готово: тренер прямо в приложении, бот — второй кнопкой
         SyncWorker.schedule(this)
-        show("✅ Всё готово", "Данные отправляются сами. Отчёт приходит в Telegram каждое утро.\n\n" + HealthSync.lastStatus(this), "Открыть бота") {
-            openUrl(HealthSync.BOT)
+        show(t("✅ Всё готово", "✅ Hammasi tayyor"), t("Данные отправляются сами. Отчёт приходит в Telegram каждое утро.", "Maʼlumotlar oʻzi yuboriladi. Hisobot har tong Telegramga keladi.") + "\n\n" + HealthSync.lastStatus(this), t("🏋️ Тренер", "🏋️ Murabbiy")) {
+            startActivity(Intent(this, CoachActivity::class.java))
         }
+        second.visibility = View.VISIBLE
     }
 
     private suspend fun hasAccess(): Boolean {
@@ -109,7 +114,7 @@ class MainActivity : ComponentActivity() {
     private suspend fun afterPermissions() {
         busy = true
         if (!hasAccess()) { busy = false; step(); return }
-        show("Отправляю данные…", "Несколько секунд", null)
+        show(t("Отправляю данные…", "Maʼlumotlar yuborilmoqda…"), t("Несколько секунд", "Bir necha soniya"), null)
         withContext(Dispatchers.IO) { runCatching { HealthSync.run(this@MainActivity, manual = true) } }
         busy = false
         step()
@@ -117,13 +122,13 @@ class MainActivity : ComponentActivity() {
 
     // ===== Интерфейс =====
     private fun show(t: String, i: String, btn: String?, on: (() -> Unit)? = null) {
-        title.text = t; info.text = i
+        title.text = t; info.text = i; second.visibility = View.GONE
         mainBtn.visibility = if (btn == null) View.GONE else View.VISIBLE
         if (btn != null) { mainBtn.text = btn; mainBtn.setOnClickListener { on?.invoke() } }
     }
 
     private fun openUrl(u: String) = try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(u))) } catch (e: Exception) {
-        Toast.makeText(this, "Не удалось открыть", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, t("Не удалось открыть", "Ochib boʻlmadi"), Toast.LENGTH_SHORT).show()
     }
 
     private fun buildUi(): View {
@@ -139,7 +144,13 @@ class MainActivity : ComponentActivity() {
             background = GradientDrawable().apply { setColor(NEON); cornerRadius = dp(14).toFloat() }
             layoutParams = LinearLayout.LayoutParams(-1, dp(56))
         }
-        root.addView(title); root.addView(info); root.addView(mainBtn)
+        // Вторая кнопка на экране «Всё готово» — открыть бота
+        second = TextView(this).apply {
+            text = t("Открыть бота в Telegram", "Botni Telegramda ochish"); setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER; setPadding(0, dp(18), 0, dp(6)); visibility = View.GONE
+            setOnClickListener { openUrl(HealthSync.BOT) }
+        }
+        root.addView(title); root.addView(info); root.addView(mainBtn); root.addView(second)
 
         // Запасной вариант — ключ вручную (скрыт под ссылкой)
         extra = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, dp(28), 0, 0) }
@@ -149,19 +160,19 @@ class MainActivity : ComponentActivity() {
             background = GradientDrawable().apply { setColor(CARD); cornerRadius = dp(14).toFloat() }
         }
         val input = EditText(this).apply {
-            hint = "Ключ из бота"; setTextColor(Color.WHITE); setHintTextColor(DIM)
+            hint = t("Ключ из бота", "Botdagi kalit"); setTextColor(Color.WHITE); setHintTextColor(DIM)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         }
         manual.addView(input)
         manual.addView(TextView(this).apply {
-            text = "Сохранить"; setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD; setPadding(0, dp(10), 0, 0)
+            text = t("Сохранить", "Saqlash"); setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD; setPadding(0, dp(10), 0, 0)
             setOnClickListener {
                 if (HealthSync.validToken(input.text.toString())) { HealthSync.setToken(this@MainActivity, input.text.toString()); lifecycleScope.launch { step() } }
-                else Toast.makeText(this@MainActivity, "Ключ неверный", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this@MainActivity, t("Ключ неверный", "Kalit notoʻgʻri"), Toast.LENGTH_SHORT).show()
             }
         })
         extra.addView(TextView(this).apply {
-            text = "Ввести ключ вручную"; setTextColor(DIM); textSize = 14f; gravity = Gravity.CENTER
+            text = t("Ввести ключ вручную", "Kalitni qoʻlda kiritish"); setTextColor(DIM); textSize = 14f; gravity = Gravity.CENTER
             setOnClickListener { manual.visibility = View.VISIBLE; visibility = View.GONE }
         })
         extra.addView(manual)
