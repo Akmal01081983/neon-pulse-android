@@ -35,7 +35,7 @@ class CoachActivity : ComponentActivity() {
         pendingCamera = null
         if (ok) req.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) else {
             req.deny()
-            Toast.makeText(this, "Без камеры проверка техники недоступна", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, HealthSync.tr(this, "Без камеры проверка техники недоступна", "Kamerasiz texnikani tekshirib boʻlmaydi"), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -50,7 +50,7 @@ class CoachActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val url = HealthSync.appUrl(this, "tech")
         if (url == null) {
-            Toast.makeText(this, "Сначала подключитесь через Telegram", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, HealthSync.tr(this, "Сначала подключитесь через Telegram", "Avval Telegram orqali ulaning"), Toast.LENGTH_SHORT).show()
             finish(); return
         }
         web = WebView(this).apply {

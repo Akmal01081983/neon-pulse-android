@@ -59,7 +59,7 @@
             android:name=".CoachActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="Тренер Neon" />
+            android:label="Neon Pulse" />
 
         <!-- Android 14+: экран «как приложение использует данные» -->
         <activity-alias
