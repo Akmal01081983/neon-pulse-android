@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
             show("Neon Pulse", t("Сон, восстановление и нагрузка с ваших часов — каждое утро в Telegram.\n\nНажмите кнопку, в Telegram нажмите «Старт» (START) и вернитесь сюда.",
                 "Soatingizdan uyqu, tiklanish va yuklama — har tong Telegramda.\n\nTugmani bosing, Telegramda «Старт» (START) ni bosing va bu yerga qayting."), t("Подключить через Telegram", "Telegram orqali ulash")) {
                 val n = HealthSync.newNonce(this)
-                openUrl("https://t.me/Neonpuls_bot?start=app_$n")
+                openUrl("https://t.me/WHOOP_Neon_bot?start=app_$n")
             }
             extra.visibility = View.VISIBLE
             return
