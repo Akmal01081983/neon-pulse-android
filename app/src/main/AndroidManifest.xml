@@ -63,6 +63,15 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="Neon Pulse" />
 
+        <!-- Снимок еды с камеры: камера пишет фото во временный файл приложения -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- Android 14+: экран «как приложение использует данные» -->
         <activity-alias
             android:name="ViewPermissionUsageActivity"

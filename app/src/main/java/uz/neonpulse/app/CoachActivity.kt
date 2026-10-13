@@ -41,8 +41,43 @@ class CoachActivity : ComponentActivity() {
 
     // Выбор или съёмка видео для проверки техники (если камера в странице не открылась)
     private val fileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
-        fileCallback?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(res.resultCode, res.data))
-        fileCallback = null
+        // Снимок с камеры приходит в наш файл (photoUri), выбор из галереи — в res.data
+        val picked = WebChromeClient.FileChooserParams.parseResult(res.resultCode, res.data)
+        val shot = photoUri
+        fileCallback?.onReceiveValue(when {
+            picked != null && picked.isNotEmpty() -> picked
+            res.resultCode == RESULT_OK && shot != null -> arrayOf(shot)
+            else -> null
+        })
+        fileCallback = null; photoUri = null
+    }
+
+    // Фото еды: камера + галерея в одном окне выбора. Камере нужно разрешение (оно уже есть у приложения для проверки техники)
+    private var photoUri: Uri? = null
+    private var pendingParams: WebChromeClient.FileChooserParams? = null
+    private val photoPermLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
+        val p = pendingParams ?: return@registerForActivityResult
+        pendingParams = null
+        openChooser(p, withCamera = ok)
+    }
+
+    private fun openChooser(params: WebChromeClient.FileChooserParams, withCamera: Boolean) {
+        try {
+            val pick = params.createIntent()
+            if (!withCamera) { fileLauncher.launch(pick); return }
+            val dir = java.io.File(cacheDir, "photos").apply { mkdirs() }
+            val file = java.io.File(dir, "meal.jpg")
+            val uri = androidx.core.content.FileProvider.getUriForFile(this, "$packageName.files", file)
+            photoUri = uri
+            val cam = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                .putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri)
+                .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val chooser = Intent.createChooser(pick, HealthSync.tr(this, "Фото еды", "Ovqat surati"))
+                .putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cam))
+            fileLauncher.launch(chooser)
+        } catch (e: Exception) {
+            fileCallback?.onReceiveValue(null); fileCallback = null; photoUri = null
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -83,7 +118,16 @@ class CoachActivity : ComponentActivity() {
                 override fun onShowFileChooser(view: WebView, callback: ValueCallback<Array<Uri>>, params: FileChooserParams): Boolean {
                     fileCallback?.onReceiveValue(null)
                     fileCallback = callback
-                    return try { fileLauncher.launch(params.createIntent()); true } catch (e: Exception) { fileCallback = null; false }
+                    // Картинка (фото еды) — предлагаем и камеру; видео для техники — как раньше
+                    val image = params.acceptTypes.any { it.startsWith("image") }
+                    if (!image) return try { fileLauncher.launch(params.createIntent()); true } catch (e: Exception) { fileCallback = null; false }
+                    if (ContextCompat.checkSelfPermission(this@CoachActivity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        openChooser(params, withCamera = true)
+                    } else {
+                        pendingParams = params
+                        photoPermLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                    return true
                 }
             }
         }
