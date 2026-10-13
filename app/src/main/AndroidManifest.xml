@@ -3,6 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Уведомление «Отчёт готов» утром (Android 13+ спрашивает разрешение) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Камера — только для проверки техники в тренере (спрашиваем, когда человек её включает) -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />

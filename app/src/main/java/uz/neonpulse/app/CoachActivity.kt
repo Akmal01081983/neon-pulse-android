@@ -48,7 +48,9 @@ class CoachActivity : ComponentActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val url = HealthSync.appUrl(this, "tech")
+        // Вкладка: «today» — отчёт (из уведомления и кнопки «Открыть Neon»), по умолчанию — «Тренер»
+        val tab = intent.getStringExtra(EXTRA_TAB)?.takeIf { it in setOf("today", "trends", "tech", "help") } ?: "tech"
+        val url = HealthSync.appUrl(this, tab)
         if (url == null) {
             Toast.makeText(this, HealthSync.tr(this, "Сначала подключитесь через Telegram", "Avval Telegram orqali ulaning"), Toast.LENGTH_SHORT).show()
             finish(); return
@@ -96,4 +98,10 @@ class CoachActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) { super.onSaveInstanceState(outState); web.saveState(outState) }
 
     override fun onDestroy() { if (::web.isInitialized) web.destroy(); super.onDestroy() }
+
+    companion object {
+        const val EXTRA_TAB = "tab"
+        fun open(ctx: android.content.Context, tab: String) =
+            Intent(ctx, CoachActivity::class.java).putExtra(EXTRA_TAB, tab)
+    }
 }

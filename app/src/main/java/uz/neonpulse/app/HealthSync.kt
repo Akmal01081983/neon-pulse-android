@@ -169,6 +169,8 @@ object HealthSync {
             val code = conn.responseCode
             conn.disconnect()
             val ok = code in 200..299
+            // Утром (ночь закончилась, данные ушли) — уведомление «Отчёт готов» прямо на телефон
+            if (ok && !manual && local.hour < 12 && sleptToday) Notifier.morning(ctx)
             setStatus(ctx, (if (ok) tr(ctx, "✅ Отправлено", "✅ Yuborildi") else tr(ctx, "⚠️ Ошибка сервера", "⚠️ Server xatosi") + " $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
             ok
         } catch (e: Exception) {

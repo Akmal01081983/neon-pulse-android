@@ -1,6 +1,8 @@
 package uz.neonpulse.app
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -16,6 +18,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.lifecycleScope
@@ -40,8 +43,12 @@ class MainActivity : ComponentActivity() {
     private lateinit var info: TextView
     private lateinit var mainBtn: Button
     private lateinit var second: TextView
+    private lateinit var coach: Button
     private lateinit var extra: LinearLayout
     private var busy = false
+
+    // Android 13+: разрешение на уведомления (утренний отчёт приходит прямо на телефон)
+    private val notifLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     private val permLauncher = registerForActivityResult(PermissionController.createRequestPermissionResultContract()) {
         lifecycleScope.launch { afterPermissions() }
@@ -97,11 +104,17 @@ class MainActivity : ComponentActivity() {
             }
             return
         }
-        // 4. Готово: тренер прямо в приложении, бот — второй кнопкой
+        // 4. Готово: отчёт и тренер прямо в приложении, бот — по желанию
         SyncWorker.schedule(this)
-        show(t("✅ Всё готово", "✅ Hammasi tayyor"), t("Данные отправляются сами. Отчёт приходит в Telegram каждое утро.", "Maʼlumotlar oʻzi yuboriladi. Hisobot har tong Telegramga keladi.") + "\n\n" + HealthSync.lastStatus(this), t("🏋️ Тренер", "🏋️ Murabbiy")) {
-            startActivity(Intent(this, CoachActivity::class.java))
+        Notifier.channel(this)
+        if (Build.VERSION.SDK_INT >= 33 && !Notifier.allowed(this) && !getSharedPreferences("neon", MODE_PRIVATE).getBoolean("notif_asked", false)) {
+            getSharedPreferences("neon", MODE_PRIVATE).edit().putBoolean("notif_asked", true).apply()
+            notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
+        show(t("✅ Всё готово", "✅ Hammasi tayyor"), t("Данные отправляются сами. Каждое утро — уведомление с отчётом.", "Maʼlumotlar oʻzi yuboriladi. Har tong — hisobot bilan bildirishnoma.") + "\n\n" + HealthSync.lastStatus(this), t("📊 Открыть Neon", "📊 Neon ni ochish")) {
+            startActivity(CoachActivity.open(this, "today"))
+        }
+        coach.visibility = View.VISIBLE
         second.visibility = View.VISIBLE
     }
 
@@ -122,7 +135,7 @@ class MainActivity : ComponentActivity() {
 
     // ===== Интерфейс =====
     private fun show(t: String, i: String, btn: String?, on: (() -> Unit)? = null) {
-        title.text = t; info.text = i; second.visibility = View.GONE
+        title.text = t; info.text = i; second.visibility = View.GONE; coach.visibility = View.GONE
         mainBtn.visibility = if (btn == null) View.GONE else View.VISIBLE
         if (btn != null) { mainBtn.text = btn; mainBtn.setOnClickListener { on?.invoke() } }
     }
@@ -144,13 +157,20 @@ class MainActivity : ComponentActivity() {
             background = GradientDrawable().apply { setColor(NEON); cornerRadius = dp(14).toFloat() }
             layoutParams = LinearLayout.LayoutParams(-1, dp(56))
         }
-        // Вторая кнопка на экране «Всё готово» — открыть бота
+        // Вторая кнопка на экране «Всё готово» — тренер
+        coach = Button(this).apply {
+            text = t("🏋️ Тренер", "🏋️ Murabbiy"); isAllCaps = false; setTextColor(NEON); textSize = 17f; typeface = Typeface.DEFAULT_BOLD
+            background = GradientDrawable().apply { setColor(CARD); cornerRadius = dp(14).toFloat(); setStroke(dp(1), NEON) }
+            layoutParams = LinearLayout.LayoutParams(-1, dp(56)).apply { topMargin = dp(12) }; visibility = View.GONE
+            setOnClickListener { startActivity(CoachActivity.open(this@MainActivity, "tech")) }
+        }
+        // Третья — открыть бота (необязательно: всё есть в приложении)
         second = TextView(this).apply {
             text = t("Открыть бота в Telegram", "Botni Telegramda ochish"); setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER; setPadding(0, dp(18), 0, dp(6)); visibility = View.GONE
             setOnClickListener { openUrl(HealthSync.BOT) }
         }
-        root.addView(title); root.addView(info); root.addView(mainBtn); root.addView(second)
+        root.addView(title); root.addView(info); root.addView(mainBtn); root.addView(coach); root.addView(second)
 
         // Запасной вариант — ключ вручную (скрыт под ссылкой)
         extra = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, dp(28), 0, 0) }
