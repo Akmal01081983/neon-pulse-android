@@ -14,6 +14,12 @@ android {
         // Номер версии берём из сборки GitHub (каждая сборка — новая версия, обновление ставится поверх)
         versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
         versionName = "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        // Тестовая сборка (pull request) — отдельное приложение «Neon Pulse TEST»:
+        // ставится рядом с рабочим и не мешает обновлению рабочей версии
+        val test = System.getenv("NP_TEST") == "1"
+        if (test) applicationIdSuffix = ".test"
+        manifestPlaceholders["appLabel"] = if (test) "Neon Pulse TEST" else "Neon Pulse"
+        manifestPlaceholders["linkScheme"] = if (test) "neonpulsetest" else "neonpulse"
     }
 
     // Подпись: ключ приходит из секретов GitHub; без него — отладочная подпись (для проверки)

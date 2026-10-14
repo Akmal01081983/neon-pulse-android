@@ -35,6 +35,8 @@ jobs:
       - name: Сборка
         env:
           NP_STORE_PASS: ${{ secrets.NP_STORE_PASS }}
+          # Pull request → тестовое приложение с отдельным именем пакета
+          NP_TEST: ${{ github.event_name == 'pull_request' && '1' || '0' }}
         run: |
           set -o pipefail
           gradle assembleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }

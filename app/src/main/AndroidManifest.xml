@@ -31,7 +31,7 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Neon Pulse"
+        android:label="${appLabel}"
         android:supportsRtl="true"
         android:theme="@style/Theme.NeonPulse">
 
@@ -48,7 +48,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="neonpulse" android:host="connect" />
+                <data android:scheme="${linkScheme}" android:host="connect" />
             </intent-filter>
             <!-- Health Connect показывает отсюда, зачем приложению доступ -->
             <intent-filter>
@@ -61,7 +61,7 @@
             android:name=".CoachActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="Neon Pulse" />
+            android:label="${appLabel}" />
 
         <!-- Снимок еды с камеры: камера пишет фото во временный файл приложения -->
         <provider
