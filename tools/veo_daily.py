@@ -71,7 +71,7 @@ def main():
     prompts = json.load(open(os.path.join(MEDIA, 'veo_prompts.json'), encoding='utf-8'))
     index = load(os.path.join(MEDIA, 'index.json'), {})
     state = load(STATE, {'log': []})
-    today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+    today = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
     used = sum(1 for e in state['log'] if e['d'] == today and e['ok'])  # неудачные попытки лимит не тратят
     left = max(0, DAILY - used)
     todo = [p for p in prompts if p['k'] in REDO] + [p for p in prompts if p['k'] not in index and p['k'] not in REDO]
