@@ -5,6 +5,16 @@
    "k": "legpress",
    "ok": false,
    "err": "HTTP 400"
+  },
+  {
+   "d": "2026-10-14",
+   "k": "legpress",
+   "ok": true
+  },
+  {
+   "d": "2026-10-14",
+   "k": "rdl",
+   "ok": true
   }
  ]
 }
