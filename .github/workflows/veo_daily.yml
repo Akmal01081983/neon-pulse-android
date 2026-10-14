@@ -1,6 +1,6 @@
 # Автозагрузка видео техники: каждый день по 2 ролика Veo по очереди из media/veo_prompts.json.
 # Ролики сразу попадают в бот и приложение (через media/index.json), APK не пересобирается.
-# Нужно: Secrets → GEMINI_API_KEY. По желанию: Variables → VEO_MODEL (модель), VEO_DAILY (лимит, по умолчанию 2).
+# Нужно: Secrets → GEMINI_API_KEY. Оповещение в бот: Secrets → NP_BOT_TOKEN, NP_OWNER_CHAT. По желанию: Variables → VEO_MODEL (модель), VEO_DAILY (лимит, по умолчанию 2).
 name: Видео Veo — ежедневно
 on:
   schedule:
@@ -59,3 +59,17 @@ jobs:
             git diff --cached --quiet || { git commit -m "media: журнал Veo"; git push; }
             echo "Сегодня новых роликов нет (лимит исчерпан, очередь пуста или ошибка — см. лог)" >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: Оповещение в бот Neon Pulse
+        if: always()
+        env:
+          TOKEN: ${{ secrets.NP_BOT_TOKEN }}
+          CHAT: ${{ secrets.NP_OWNER_CHAT }}
+          MADE: ${{ steps.gen.outputs.made }}
+          JOB: ${{ job.status }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then echo "Оповещение выключено (нет NP_BOT_TOKEN / NP_OWNER_CHAT)"; exit 0; fi
+          TEXT=$(python3 tools/veo_notify.py "$MADE" "$JOB" "$RUN")
+          curl -s -o /dev/null -w "Telegram: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT" -d disable_web_page_preview=true
