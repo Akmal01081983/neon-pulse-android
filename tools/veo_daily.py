@@ -29,11 +29,21 @@ def api(url, body=None):
         return json.loads(r.read())
 
 
+def start(prompt):
+    # Сначала полный набор параметров; при отказе 400 — минимальный (часть моделей/ключей не принимает лишние поля)
+    variants = [{'aspectRatio': '16:9', 'durationSeconds': 8, 'resolution': '720p', 'personGeneration': 'allow_all'},
+                {'aspectRatio': '16:9'}]
+    for i, prm in enumerate(variants):
+        try:
+            return api(f'{BASE}/models/{MODEL}:predictLongRunning', {'instances': [{'prompt': prompt}], 'parameters': prm})
+        except urllib.error.HTTPError as e:
+            if e.code != 400 or i == len(variants) - 1:
+                raise
+            print('  400 на полных параметрах, пробую минимальные:', e.read().decode(errors='ignore')[:200])
+
+
 def generate(prompt, raw):
-    op = api(f'{BASE}/models/{MODEL}:predictLongRunning', {
-        'instances': [{'prompt': prompt}],
-        'parameters': {'aspectRatio': '16:9', 'durationSeconds': '8', 'resolution': '720p', 'personGeneration': 'allow_all'}})
-    name = op['name']
+    name = start(prompt)['name']
     for _ in range(90):                               # до 15 минут ожидания
         time.sleep(10)
         st = api(f'{BASE}/{name}')
@@ -78,7 +88,11 @@ def main():
             print('  ✓ готово')
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors='ignore')[:300]
-            state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': f'HTTP {e.code}'})
+            try:
+                msg = json.loads(msg)['error']['message'][:300]   # текст ошибки Google — в журнал
+            except Exception:
+                pass
+            state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': f'HTTP {e.code}: {msg}'})
             print(f'  ✗ HTTP {e.code}: {msg}')
             if e.code in (429, 403, 400):   # лимит/ключ/модель — дальше пробовать бессмысленно
                 break
