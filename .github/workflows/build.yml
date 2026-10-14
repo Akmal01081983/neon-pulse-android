@@ -16,6 +16,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v5
@@ -37,19 +39,24 @@ jobs:
           NP_STORE_PASS: ${{ secrets.NP_STORE_PASS }}
           # Pull request → тестовое приложение с отдельным именем пакета
           NP_TEST: ${{ github.event_name == 'pull_request' && '1' || '0' }}
+          # ID клиента Google (не секрет) — в настройках репозитория: Variables → NP_GOOGLE_CLIENT_ID
+          NP_GOOGLE_CLIENT_ID: ${{ vars.NP_GOOGLE_CLIENT_ID }}
         run: |
           set -o pipefail
-          gradle assembleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }
+          gradle assembleRelease bundleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }
 
       - name: Готовый файл
         run: |
           cp app/build/outputs/apk/release/*.apk NeonPulse.apk
+          cp app/build/outputs/bundle/release/*.aab NeonPulse.aab
           if [ -n "$NP_KEYSTORE" ]; then echo "::notice title=sign::release"; else echo "::warning title=sign::debug"; fi
 
       - uses: actions/upload-artifact@v4
         with:
           name: NeonPulse
-          path: NeonPulse.apk
+          path: |
+            NeonPulse.apk
+            NeonPulse.aab
 
       # Pull request: тестовая версия по прямой ссылке …/releases/download/test/NeonPulse.apk
       # (предварительный выпуск, не «latest» — ссылка в боте продолжает отдавать рабочую версию)
@@ -71,4 +78,18 @@ jobs:
           tag_name: v${{ github.run_number }}
           name: Neon Pulse ${{ github.run_number }}
           make_latest: true
-          files: NeonPulse.apk
+          files: |
+            NeonPulse.apk
+            NeonPulse.aab
+
+      # Google Play: каждая сборка main уходит во «Внутреннее тестирование» (internal), если задан ключ сервисного аккаунта.
+      # Первую версию владелец загружает в Play Console вручную (файл NeonPulse.aab из релиза) — так требует Google.
+      - name: Google Play — внутреннее тестирование
+        if: github.event_name != 'pull_request' && env.PLAY_JSON != ''
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: uz.neonpulse.app
+          releaseFiles: NeonPulse.aab
+          track: internal
+          status: completed

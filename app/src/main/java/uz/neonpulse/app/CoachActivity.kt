@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat
 /**
  * Тренер внутри приложения: мини-приложение Neon сразу на вкладке «Тренер»
  * (карта мышц, упражнения, видео, проверка техники по камере).
- * Анкета и тренировка дня — в боте; ссылки на Telegram открываются в Telegram.
+ * Чат (анкета, тренировка дня, ИИ) — на вкладке «Чат»; Telegram не нужен, ссылки на него открываются в Telegram.
  */
 class CoachActivity : ComponentActivity() {
     private lateinit var web: WebView
@@ -35,7 +35,7 @@ class CoachActivity : ComponentActivity() {
         pendingCamera = null
         if (ok) req.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) else {
             req.deny()
-            Toast.makeText(this, HealthSync.tr(this, "Без камеры проверка техники недоступна", "Kamerasiz texnikani tekshirib boʻlmaydi"), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, HealthSync.tr(this, "Без камеры проверка техники недоступна", "Kamerasiz texnikani tekshirib boʻlmaydi", "Technique check needs the camera"), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -72,7 +72,7 @@ class CoachActivity : ComponentActivity() {
             val cam = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
                 .putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val chooser = Intent.createChooser(pick, HealthSync.tr(this, "Фото еды", "Ovqat surati"))
+            val chooser = Intent.createChooser(pick, HealthSync.tr(this, "Фото еды", "Ovqat surati", "Meal photo"))
                 .putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(cam))
             fileLauncher.launch(chooser)
         } catch (e: Exception) {
@@ -84,10 +84,10 @@ class CoachActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Вкладка: «today» — отчёт (из уведомления и кнопки «Открыть Neon»), по умолчанию — «Тренер»
-        val tab = intent.getStringExtra(EXTRA_TAB)?.takeIf { it in setOf("today", "trends", "tech", "help") } ?: "tech"
+        val tab = intent.getStringExtra(EXTRA_TAB)?.takeIf { it in setOf("today", "trends", "tech", "chat", "help") } ?: "tech"
         val url = HealthSync.appUrl(this, tab)
         if (url == null) {
-            Toast.makeText(this, HealthSync.tr(this, "Сначала подключитесь через Telegram", "Avval Telegram orqali ulaning"), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, HealthSync.tr(this, "Сначала войдите в аккаунт", "Avval akkauntga kiring", "Please sign in first"), Toast.LENGTH_SHORT).show()
             finish(); return
         }
         web = WebView(this).apply {
@@ -131,7 +131,14 @@ class CoachActivity : ComponentActivity() {
                 }
             }
         }
-        setContentView(web)
+        // Android 15+: экран рисуется под строкой состояния — отступаем от системных панелей и клавиатуры
+        val box = android.widget.FrameLayout(this).apply { setBackgroundColor(Color.parseColor("#07070F")); addView(web) }
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(box) { v, ins ->
+            val b = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.ime())
+            v.setPadding(b.left, b.top, b.right, b.bottom)
+            androidx.core.view.WindowInsetsCompat.CONSUMED
+        }
+        setContentView(box)
         // «Назад»: сначала по страницам мини-приложения, потом — на главный экран
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (web.canGoBack()) web.goBack() else finish() }

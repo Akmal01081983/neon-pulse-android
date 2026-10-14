@@ -24,8 +24,8 @@ object Notifier {
     /** Канал уведомлений (Android 8+); повторный вызов ничего не меняет */
     fun channel(ctx: Context) {
         if (Build.VERSION.SDK_INT < 26) return
-        val ch = NotificationChannel(CHANNEL, HealthSync.tr(ctx, "Утренний отчёт", "Ertalabki hisobot"), NotificationManager.IMPORTANCE_DEFAULT)
-        ch.description = HealthSync.tr(ctx, "Сон, заряд и цель нагрузки на день", "Uyqu, quvvat va kunlik yuklama maqsadi")
+        val ch = NotificationChannel(CHANNEL, HealthSync.tr(ctx, "Утренний отчёт", "Ertalabki hisobot", "Morning report"), NotificationManager.IMPORTANCE_DEFAULT)
+        ch.description = HealthSync.tr(ctx, "Сон, заряд и цель нагрузки на день", "Uyqu, quvvat va kunlik yuklama maqsadi", "Sleep, recovery and today’s strain target")
         ctx.getSystemService(NotificationManager::class.java).createNotificationChannel(ch)
     }
 
@@ -43,8 +43,8 @@ object Notifier {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val n = NotificationCompat.Builder(ctx, CHANNEL)
             .setSmallIcon(R.drawable.ic_fg)
-            .setContentTitle(HealthSync.tr(ctx, "☀️ Отчёт на сегодня готов", "☀️ Bugungi hisobot tayyor"))
-            .setContentText(HealthSync.tr(ctx, "Сон, заряд и цель нагрузки — нажмите, чтобы открыть", "Uyqu, quvvat va yuklama maqsadi — ochish uchun bosing"))
+            .setContentTitle(HealthSync.tr(ctx, "☀️ Отчёт на сегодня готов", "☀️ Bugungi hisobot tayyor", "☀️ Today’s report is ready"))
+            .setContentText(HealthSync.tr(ctx, "Сон, заряд и цель нагрузки — нажмите, чтобы открыть", "Uyqu, quvvat va yuklama maqsadi — ochish uchun bosing", "Sleep, recovery and strain target — tap to open"))
             .setContentIntent(open)
             .setAutoCancel(true)
             .build()
