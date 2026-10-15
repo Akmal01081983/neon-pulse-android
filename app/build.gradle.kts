@@ -10,10 +10,18 @@ android {
     defaultConfig {
         applicationId = "uz.neonpulse.app"
         minSdk = 28          // Health Connect работает с Android 9
-        targetSdk = 35
+        targetSdk = 36      // требование Google Play для новых приложений
         // Номер версии берём из сборки GitHub (каждая сборка — новая версия, обновление ставится поверх)
         versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
         versionName = "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        // Тестовая сборка (pull request) — отдельное приложение «Neon Pulse TEST»:
+        // ставится рядом с рабочим и не мешает обновлению рабочей версии
+        val test = System.getenv("NP_TEST") == "1"
+        if (test) applicationIdSuffix = ".test"
+        manifestPlaceholders["appLabel"] = if (test) "Neon Pulse TEST" else "Neon Pulse"
+        manifestPlaceholders["linkScheme"] = if (test) "neonpulsetest" else "neonpulse"
+        // Вход через Google: ID клиента (тип Web) из Google Cloud. Пусто — кнопка Google скрыта, остаётся вход через Telegram
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"" + (System.getenv("NP_GOOGLE_CLIENT_ID") ?: "") + "\"")
     }
 
     // Подпись: ключ приходит из секретов GitHub; без него — отладочная подпись (для проверки)
@@ -46,4 +54,8 @@ dependencies {
     implementation("androidx.health.connect:connect-client:1.1.0-rc01")
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    // Вход через Google (Credential Manager)
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 }

@@ -28,16 +28,15 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.reflect.KClass
 
-/** Чтение данных из Health Connect и отправка в бот (формат совпадает с приёмом Android в n8n — WF13). */
+/** Чтение данных из Health Connect и отправка на сервер Neon Pulse (формат — приём Android в n8n, WF13). Telegram не нужен. */
 object HealthSync {
     const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
-    const val BOT = "https://t.me/WHOOP_Neon_bot"
     const val HOST = "akmalparpiev.app.n8n.cloud"
-    /** Мини-приложение Neon (то же, что «📱 Neon» в Telegram) на нужной вкладке; ключ страницы — md5 от ключа приложения */
+    /** Экраны Neon (Сегодня, Тренды, Тренер, Чат) на нужной вкладке; app=1 — режим приложения без Telegram. Ключ страницы — md5 от ключа приложения */
     fun appUrl(ctx: Context, tab: String): String? {
         val t = token(ctx) ?: return null
         val k = java.security.MessageDigest.getInstance("MD5").digest(t.toByteArray()).joinToString("") { "%02x".format(it) }
-        return "https://$HOST/webhook/health-app?k=$k&tab=$tab"
+        return "https://$HOST/webhook/health-app?k=$k&tab=$tab&app=1"
     }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
 
@@ -50,42 +49,92 @@ object HealthSync {
     )
     val PERMISSIONS: Set<String> = TYPES.map { HealthPermission.getReadPermission(it) }.toSet() + BACKGROUND
 
-    /** Язык телефона узбекский — тексты на узбекском (латиница), иначе по-русски */
-    fun uz(ctx: Context) = ctx.resources.configuration.locales[0].language == "uz"
-    fun tr(ctx: Context, ru: String, uz: String) = if (uz(ctx)) uz else ru
+    /** Язык интерфейса по языку телефона: узбекский → uz, русский и языки СНГ → ru, остальные → en (Google Play по всему миру) */
+    private val RU_FAMILY = setOf("ru", "be", "kk", "ky", "tg", "tk", "hy", "az", "ka", "uk")
+    fun lang(ctx: Context): String {
+        val l = ctx.resources.configuration.locales[0].language
+        return when { l == "uz" -> "uz"; l in RU_FAMILY -> "ru"; else -> "en" }
+    }
+    fun uz(ctx: Context) = lang(ctx) == "uz"
+    /** Язык для сервера: отчёты, тренер и чат — на том же языке, что и приложение */
+    fun serverLang(ctx: Context) = lang(ctx)
+    fun tr(ctx: Context, ru: String, uz: String, en: String) = when (lang(ctx)) { "uz" -> uz; "en" -> en; else -> ru }
 
     fun available(ctx: Context) = HealthConnectClient.getSdkStatus(ctx) == HealthConnectClient.SDK_AVAILABLE
 
-    // ===== Настройки (ключ из бота и итог последней отправки) =====
+    // ===== Настройки (ключ аккаунта и итог последней отправки) =====
     private fun prefs(ctx: Context) = ctx.getSharedPreferences("neon", Context.MODE_PRIVATE)
     fun token(ctx: Context): String? = prefs(ctx).getString("token", null)
     fun setToken(ctx: Context, t: String) = prefs(ctx).edit().putString("token", t.trim().lowercase()).apply()
-    fun lastStatus(ctx: Context): String = prefs(ctx).getString("last", tr(ctx, "Ещё не отправляли", "Hali yuborilmagan")) ?: ""
+    fun lastStatus(ctx: Context): String = prefs(ctx).getString("last", tr(ctx, "Ещё не отправляли", "Hali yuborilmagan", "Not sent yet")) ?: ""
     private fun setStatus(ctx: Context, s: String) = prefs(ctx).edit().putString("last", s).apply()
     fun validToken(t: String) = Regex("^[a-z0-9]{32}$").matches(t.trim().lowercase())
 
-    // ===== Вход через Telegram: одноразовый код → бот → забираем ключ =====
-    const val PAIR = "https://akmalparpiev.app.n8n.cloud/webhook/app-pair"
-    fun newNonce(ctx: Context): String {
-        val abc = "abcdefghijklmnopqrstuvwxyz0123456789"
-        val rnd = java.security.SecureRandom()
-        val n = (1..24).map { abc[rnd.nextInt(abc.length)] }.joinToString("")
-        prefs(ctx).edit().putString("nonce", n).apply()
-        return n
+    // ===== Аккаунт без Telegram: «Начать», вход через Google, оплата, «входящие», удаление =====
+    private const val API = "https://$HOST/webhook"
+
+    /** Небольшой запрос к серверу; ответ — JSON или null при ошибке сети */
+    private fun call(method: String, url: String, body: JSONObject? = null): JSONObject? = try {
+        val conn = URL(url).openConnection() as HttpURLConnection
+        conn.requestMethod = method
+        conn.connectTimeout = 15000; conn.readTimeout = 30000
+        if (body != null) {
+            conn.doOutput = true
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+            conn.outputStream.use { it.write(body.toString().toByteArray()) }
+        }
+        val txt = (if (conn.responseCode in 200..299) conn.inputStream else conn.errorStream)?.bufferedReader()?.use { it.readText() } ?: ""
+        conn.disconnect()
+        JSONObject(txt)
+    } catch (e: Exception) { null }
+
+    /** «Начать» без входа: аккаунт по устройству (ANDROID_ID). После переустановки — тот же аккаунт. null — успех, иначе код ошибки */
+    @android.annotation.SuppressLint("HardwareIds")
+    fun register(ctx: Context): String? {
+        val dev = android.provider.Settings.Secure.getString(ctx.contentResolver, android.provider.Settings.Secure.ANDROID_ID) ?: return "device"
+        val r = call("POST", "$API/app-register", JSONObject().put("device", dev).put("lang", serverLang(ctx))) ?: return "network"
+        val t = r.optString("token", "")
+        if (validToken(t)) { setToken(ctx, t); return null }
+        return r.optString("error", "error")
     }
-    fun nonce(ctx: Context): String? = prefs(ctx).getString("nonce", null)
-    /** Спрашиваем сервер: нажал ли человек START в боте. Да — сохраняем ключ. */
-    fun claim(ctx: Context): Boolean {
-        val n = nonce(ctx) ?: return false
-        return try {
-            val conn = URL("$PAIR?n=$n").openConnection() as HttpURLConnection
-            conn.connectTimeout = 10000; conn.readTimeout = 15000
-            val txt = conn.inputStream.bufferedReader().use { it.readText() }
-            conn.disconnect()
-            val t = JSONObject(txt).optString("token", "")
-            if (validToken(t)) { setToken(ctx, t); prefs(ctx).edit().remove("nonce").apply(); true } else false
-        } catch (e: Exception) { false }
+
+    /** Оплата — единственный переход в Telegram: одноразовая ссылка на бота, счёт на этот аккаунт. product: year / coach_m / coach_y */
+    fun payUrl(ctx: Context, product: String): String? {
+        val t = token(ctx) ?: return null
+        val r = call("GET", "$API/app-pay?t=$t&p=$product") ?: return null
+        return r.optString("url", "").takeIf { it.startsWith("https://t.me/") }
     }
+
+    /** «Входящие» без пометки прочитанным: сколько новых и какого вида последнее (week / bioage / subscription / paid) */
+    fun inboxPeek(ctx: Context): Pair<Int, String?>? {
+        val t = token(ctx) ?: return null
+        val r = call("GET", "$API/app-inbox?t=$t&peek=1") ?: return null
+        return r.optInt("unread", 0) to r.optString("last", "").ifEmpty { null }
+    }
+
+    /** Вход через Google: id_token → ключ приложения. Уже есть аккаунт («Начать») — Google привязывается к нему (перенос на другой телефон). */
+    fun googleLogin(ctx: Context, idToken: String, name: String?): String? {
+        val b = JSONObject().put("id_token", idToken).put("lang", serverLang(ctx)).put("name", name ?: "")
+        token(ctx)?.let { b.put("t", it) }
+        val r = call("POST", "$API/app-google", b) ?: return "network"
+        val t = r.optString("token", "")
+        if (validToken(t)) { setToken(ctx, t); prefs(ctx).edit().putBoolean("google", true).apply(); return null }
+        return r.optString("error", "error")
+    }
+    fun hasGoogle(ctx: Context) = prefs(ctx).getBoolean("google", false)
+
+    /** Удаление аккаунта и всех данных на сервере; при успехе — выход */
+    fun deleteAccount(ctx: Context): Boolean {
+        val t = token(ctx) ?: return false
+        val r = call("POST", "$API/app-delete", JSONObject().put("t", t)) ?: return false
+        if (r.optBoolean("deleted")) { logout(ctx); return true }
+        return false
+    }
+
+    /** Выход: ключ и настройки стираются с телефона (данные на сервере остаются) */
+    fun logout(ctx: Context) { prefs(ctx).edit().clear().apply() }
+
+    const val PRIVACY = "https://$HOST/webhook/privacy"
 
     private suspend fun <T : Record> readAll(c: HealthConnectClient, type: KClass<T>, from: Instant, to: Instant): List<T> {
         val out = mutableListOf<T>()
@@ -103,11 +152,11 @@ object HealthSync {
      * Автоматически утром (до 12:00) ждём, пока закончится сон, иначе отчёт уйдёт с неполной ночью.
      */
     suspend fun run(ctx: Context, manual: Boolean): Boolean {
-        val token = token(ctx) ?: run { setStatus(ctx, tr(ctx, "Нет ключа — подключитесь из бота", "Kalit yoʻq — botdan ulaning")); return false }
-        if (!available(ctx)) { setStatus(ctx, tr(ctx, "Health Connect не установлен", "Health Connect oʻrnatilmagan")); return false }
+        val token = token(ctx) ?: run { setStatus(ctx, tr(ctx, "Нет ключа — войдите в аккаунт", "Kalit yoʻq — akkauntga kiring", "No key — please sign in")); return false }
+        if (!available(ctx)) { setStatus(ctx, tr(ctx, "Health Connect не установлен", "Health Connect oʻrnatilmagan", "Health Connect is not installed")); return false }
         val c = HealthConnectClient.getOrCreate(ctx)
         val granted = c.permissionController.getGrantedPermissions()
-        if (!granted.containsAll(PERMISSIONS - BACKGROUND)) { setStatus(ctx, tr(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»", "Maʼlumotlarga ruxsat yoʻq — «Ruxsat berish» ni bosing")); return false }
+        if (!granted.containsAll(PERMISSIONS - BACKGROUND)) { setStatus(ctx, tr(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»", "Maʼlumotlarga ruxsat yoʻq — «Ruxsat berish» ni bosing", "No data access — tap “Allow access”")); return false }
 
         val now = Instant.now()
         val from = now.minus(Duration.ofHours(26))
@@ -115,7 +164,7 @@ object HealthSync {
         val local = ZonedDateTime.now(ZoneId.systemDefault())
         val dayStart = local.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant()
         val sleptToday = sleep.any { it.endTime.isAfter(dayStart) && it.endTime.isBefore(now.minus(Duration.ofMinutes(20))) }
-        if (!manual && local.hour < 12 && !sleptToday) { setStatus(ctx, tr(ctx, "Жду окончания сна", "Uyqu tugashini kutyapman") + " — ${local.toLocalTime().withNano(0)}"); return false }
+        if (!manual && local.hour < 12 && !sleptToday) { setStatus(ctx, tr(ctx, "Жду окончания сна", "Uyqu tugashini kutyapman", "Waiting for sleep to end") + " — ${local.toLocalTime().withNano(0)}"); return false }
 
         val body = JSONObject()
         body.put("heart_rate", JSONArray().apply {
@@ -169,10 +218,12 @@ object HealthSync {
             val code = conn.responseCode
             conn.disconnect()
             val ok = code in 200..299
-            setStatus(ctx, (if (ok) tr(ctx, "✅ Отправлено", "✅ Yuborildi") else tr(ctx, "⚠️ Ошибка сервера", "⚠️ Server xatosi") + " $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
+            // Утром (ночь закончилась, данные ушли) — уведомление «Отчёт готов» прямо на телефон
+            if (ok && !manual && local.hour < 12 && sleptToday) Notifier.morning(ctx)
+            setStatus(ctx, (if (ok) tr(ctx, "✅ Отправлено", "✅ Yuborildi", "✅ Sent") else tr(ctx, "⚠️ Ошибка сервера", "⚠️ Server xatosi", "⚠️ Server error") + " $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
             ok
         } catch (e: Exception) {
-            setStatus(ctx, tr(ctx, "⚠️ Нет интернета — повторю позже", "⚠️ Internet yoʻq — keyinroq qayta urinaman"))
+            setStatus(ctx, tr(ctx, "⚠️ Нет интернета — повторю позже", "⚠️ Internet yoʻq — keyinroq qayta urinaman", "⚠️ No internet — will retry later"))
             false
         }
     }
