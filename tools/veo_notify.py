@@ -2,7 +2,8 @@
 # Текст оповещения владельцу о запуске видео Veo. Аргументы: <ключи через запятую> <статус job> <ссылка на запуск>
 import json, os, sys, datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-made, job, run = (sys.argv[1:] + ['', '', ''])[:3]
+QUIET = '--quiet' in sys.argv
+made, job, run = ([a for a in sys.argv[1:] if a != '--quiet'] + ['', '', ''])[:3]
 made = [k for k in made.split(',') if k]
 prompts = json.load(open(os.path.join(ROOT, 'media', 'veo_prompts.json'), encoding='utf-8'))
 names = {p['k']: p['n'] for p in prompts}
@@ -18,6 +19,11 @@ try:
 except Exception:
     log = []
 errs = [e for e in log if e['d'] == today and not e['ok']]
+if QUIET:
+    # skip — сегодня лимит уже выбран без ошибок (запасной запуск), сообщать нечего
+    oks = sum(1 for e in log if e['d'] == today and e['ok'])
+    print('skip' if oks >= int(os.environ.get('DAILY') or 2) and not errs else 'send')
+    sys.exit(0)
 lines = []
 if made:
     lines.append('🎬 Видео техники загружены: ' + str(len(made)))
