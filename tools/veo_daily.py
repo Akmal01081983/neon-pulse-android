@@ -154,7 +154,7 @@ def main():
                 pass
             state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': f'HTTP {e.code}: {msg}'})
             print(f'  ✗ HTTP {e.code}: {msg}')
-            if e.code in (429, 403, 400):   # лимит/ключ/модель — дальше пробовать бессмысленно
+            if e.code in (429, 403, 402, 400):   # лимит/баланс/ключ/модель — дальше пробовать бессмысленно
                 break
         except Exception as e:
             state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': str(e)[:200]})
