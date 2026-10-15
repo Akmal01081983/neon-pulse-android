@@ -1,0 +1,75 @@
+# Автозагрузка видео техники: каждый день по 2 ролика Veo по очереди из media/veo_prompts.json.
+# Ролики сразу попадают в бот и приложение (через media/index.json), APK не пересобирается.
+# Нужно: Secrets → GEMINI_API_KEY. Оповещение в бот: Secrets → NP_BOT_TOKEN, NP_OWNER_CHAT. По желанию: Variables → VEO_MODEL (модель), VEO_DAILY (лимит, по умолчанию 2).
+name: Видео Veo — ежедневно
+on:
+  schedule:
+    - cron: '17 2 * * *'          # 07:17 по Ташкенту
+  workflow_dispatch:
+    inputs:
+      redo:
+        description: 'Переснять ролики (ключи через запятую, напр. rdl,bench)'
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veo-daily
+  cancel-in-progress: false
+
+jobs:
+  veo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Генерация (не больше лимита в сутки)
+        id: gen
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VEO_MODEL: ${{ vars.VEO_MODEL }}
+          DAILY: ${{ vars.VEO_DAILY }}
+          REDO: ${{ github.event.inputs.redo }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then echo "::error::Нет секрета GEMINI_API_KEY"; exit 1; fi
+          python3 tools/veo_daily.py
+
+      - name: Публикация
+        env:
+          MADE: ${{ steps.gen.outputs.made }}
+        run: |
+          git config user.name "neon-pulse-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add media/veo_state.json
+          if [ -n "$MADE" ]; then
+            for k in ${MADE//,/ }; do git add "media/$k.mp4"; done
+            git commit -m "media: $MADE (Veo)"
+            git push
+            SHA=$(git rev-parse HEAD)
+            python3 tools/veo_index.py "$SHA" "$MADE"
+            git add media/index.json
+            git commit -m "media: ссылки $MADE"
+            git push
+            echo "✅ Загружено: $MADE" >> $GITHUB_STEP_SUMMARY
+          else
+            git diff --cached --quiet || { git commit -m "media: журнал Veo"; git push; }
+            echo "Сегодня новых роликов нет (лимит исчерпан, очередь пуста или ошибка — см. лог)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Оповещение в бот Neon Pulse
+        if: always()
+        env:
+          TOKEN: ${{ secrets.NP_BOT_TOKEN }}
+          CHAT: ${{ secrets.NP_OWNER_CHAT }}
+          MADE: ${{ steps.gen.outputs.made }}
+          JOB: ${{ job.status }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then echo "Оповещение выключено (нет NP_BOT_TOKEN / NP_OWNER_CHAT)"; exit 0; fi
+          TEXT=$(python3 tools/veo_notify.py "$MADE" "$JOB" "$RUN")
+          curl -s -o /dev/null -w "Telegram: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT" -d disable_web_page_preview=true
