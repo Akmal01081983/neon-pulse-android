@@ -50,18 +50,15 @@ object HealthSync {
     )
     val PERMISSIONS: Set<String> = TYPES.map { HealthPermission.getReadPermission(it) }.toSet() + BACKGROUND
 
-    /**
-     * Язык интерфейса по языку телефона: узбекский → uz, русский и языки СНГ → ru, остальные → en (Google Play по всему миру).
-     * Сервер (отчёты, тренер, чат) пока знает ru и uz — для английского телефона он отвечает по-русски.
-     */
+    /** Язык интерфейса по языку телефона: узбекский → uz, русский и языки СНГ → ru, остальные → en (Google Play по всему миру) */
     private val RU_FAMILY = setOf("ru", "be", "kk", "ky", "tg", "tk", "hy", "az", "ka", "uk")
     fun lang(ctx: Context): String {
         val l = ctx.resources.configuration.locales[0].language
         return when { l == "uz" -> "uz"; l in RU_FAMILY -> "ru"; else -> "en" }
     }
     fun uz(ctx: Context) = lang(ctx) == "uz"
-    /** Язык для сервера (ru/uz) */
-    fun serverLang(ctx: Context) = if (uz(ctx)) "uz" else "ru"
+    /** Язык для сервера: отчёты, тренер и чат — на том же языке, что и приложение */
+    fun serverLang(ctx: Context) = lang(ctx)
     fun tr(ctx: Context, ru: String, uz: String, en: String) = when (lang(ctx)) { "uz" -> uz; "en" -> en; else -> ru }
 
     fun available(ctx: Context) = HealthConnectClient.getSdkStatus(ctx) == HealthConnectClient.SDK_AVAILABLE
