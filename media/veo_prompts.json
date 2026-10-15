@@ -2,296 +2,607 @@
  {
   "k": "squat",
   "n": "Приседания со штангой",
-  "p": "8-second fitness demonstration video. The figure performs a barbell back squat with a clearly visible full-length Olympic barbell loaded with black weight plates on both ends, resting across the upper back; feet slightly wider than shoulders, toes slightly out; hips move back and down into a DEEP squat: at the bottom the thighs are parallel to the floor and the hips are at the same height as the knees; pauses at the bottom for one second; knees track over the toes, heels stay flat, back neutral, chest up; then stands up. Two slow controlled reps. Camera: side three-quarter view (about 30 degrees from the side, so the whole barbell and both plates are visible) at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a barbell back squat with a clearly visible full-length Olympic barbell loaded with black weight plates on both ends, resting across the upper back; feet slightly wider than shoulders, toes slightly out; hips move back and down into a DEEP squat: at the bottom the thighs are parallel to the floor and the hips are at the same height as the knees; pauses at the bottom for one second; knees track over the toes, heels stay flat, back neutral, chest up; then stands up. Two slow controlled reps. Camera: side three-quarter view (about 30 degrees from the side, so the whole barbell and both plates are visible) at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Штанга на верхней части спины (не на шее), стопы чуть шире плеч, носки немного наружу. Отведите таз назад и вниз, как будто садитесь на стул. Опуститесь до параллели бедра с полом. Встаньте, толкая пол всей стопой.",
+  "errors": [
+   "Колени заваливаются внутрь — держите их по линии носков",
+   "Пятки отрываются от пола",
+   "Спина округляется внизу"
+  ]
  },
  {
   "k": "goblet",
   "n": "Гоблет-приседания с гантелью",
-  "p": "8-second fitness demonstration video. The figure performs a goblet squat holding one dumbbell vertically against the chest, elbows pointing down; squats down between the knees with an upright torso until elbows nearly touch the knees, then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a goblet squat holding one dumbbell vertically against the chest, elbows pointing down; squats down between the knees with an upright torso until elbows nearly touch the knees, then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Гантель вертикально у груди, локти вниз, стопы на ширине плеч. Садитесь вниз между коленями, корпус прямой. Локти внизу почти касаются коленей. Встаньте.",
+  "errors": [
+   "Наклон корпуса вперёд",
+   "Колени внутрь",
+   "Слишком быстрый спуск"
+  ]
  },
  {
   "k": "squat_bw",
   "n": "Приседания с весом тела",
-  "p": "8-second fitness demonstration video. The figure performs a bodyweight squat with arms extended forward for balance; hips back and down, neutral spine, heels flat, as deep as comfortable; then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a bodyweight squat with arms extended forward for balance; hips back and down, neutral spine, heels flat, as deep as comfortable; then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стопы на ширине плеч, руки вперёд для баланса. Таз назад и вниз, спина прямая, опуститесь как можно ниже без боли. Поднимитесь.",
+  "errors": [
+   "Колени выходят сильно вперёд и внутрь",
+   "Пятки отрываются",
+   "Сгорбленная спина"
+  ]
  },
  {
   "k": "legpress",
   "n": "Жим ногами в тренажёре",
-  "p": "8-second fitness demonstration video. The figure performs a seated leg press machine: back and hips pressed into the backrest, feet shoulder-width in the middle of the platform; lowers the platform until knees reach about 90 degrees, then presses up without fully locking the knees. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a seated leg press machine: back and hips pressed into the backrest, feet shoulder-width in the middle of the platform; lowers the platform until knees reach about 90 degrees, then presses up without fully locking the knees. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Спина и таз плотно прижаты к спинке, стопы на ширине плеч в середине платформы. Опустите платформу до угла в коленях ~90°, затем выжмите, не выпрямляя колени до щелчка.",
+  "errors": [
+   "Таз отрывается от сиденья внизу",
+   "Полное выпрямление колен",
+   "Колени внутрь"
+  ]
  },
  {
   "k": "lunge_db",
   "n": "Выпады с гантелями",
-  "p": "8-second fitness demonstration video. The figure performs a forward lunge holding a dumbbell in each hand. IMPORTANT: the arms hang straight down at the sides the whole time and do NOT move, the dumbbells stay beside the thighs, they are never lifted, raised or swung out to the sides. The figure takes a big step FORWARD (not backward), lowers straight down until the back knee almost touches the floor and the front knee is over the ankle, torso upright, then pushes off the front foot back to standing. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a forward lunge holding a dumbbell in each hand. IMPORTANT: the arms hang straight down at the sides the whole time and do NOT move, the dumbbells stay beside the thighs, they are never lifted, raised or swung out to the sides. The figure takes a big step FORWARD (not backward), lowers straight down until the back knee almost touches the floor and the front knee is over the ankle, torso upright, then pushes off the front foot back to standing. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Гантели в руках вдоль тела, стоя прямо. Шаг вперёд, опуститесь, пока заднее колено почти не коснётся пола. Оттолкнитесь передней ногой и вернитесь.",
+  "errors": [
+   "Переднее колено уходит внутрь",
+   "Слишком короткий шаг",
+   "Корпус падает вперёд"
+  ]
  },
  {
   "k": "lunge_bw",
   "n": "Выпады назад",
-  "p": "8-second fitness demonstration video. The figure performs a reverse lunge with hands on hips: steps back, lowers until both knees are at 90 degrees, torso upright, then returns to standing. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a reverse lunge with hands on hips: steps back, lowers until both knees are at 90 degrees, torso upright, then returns to standing. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя прямо, руки на поясе. Шаг назад, опуститесь до угла 90° в обоих коленях, вернитесь. Чередуйте ноги.",
+  "errors": [
+   "Переднее колено внутрь",
+   "Наклон корпуса",
+   "Удар коленом об пол"
+  ]
  },
  {
   "k": "rdl",
   "n": "Румынская тяга с гантелями",
-  "p": "8-second fitness demonstration video. The figure performs a dumbbell Romanian deadlift: standing with dumbbells in front of the thighs, knees slightly bent; pushes the hips back with a flat neutral back while the dumbbells slide close along the legs to mid-shin, then returns to standing squeezing the glutes. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a dumbbell Romanian deadlift: standing with dumbbells in front of the thighs, knees slightly bent; pushes the hips back with a flat neutral back while the dumbbells slide close along the legs to mid-shin, then returns to standing squeezing the glutes. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя, гантели перед бёдрами, колени чуть согнуты, спина прямая. Отводите таз назад, гантели скользят вдоль ног до середины голени. Вернитесь, сжимая ягодицы.",
+  "errors": [
+   "Округление спины",
+   "Гантели далеко от ног",
+   "Приседание вместо наклона"
+  ]
  },
  {
   "k": "hipthrust",
   "n": "Ягодичный мост со штангой",
-  "p": "8-second fitness demonstration video. The figure performs a barbell hip thrust: shoulder blades on a flat bench, padded barbell across the hips, feet shoulder-width; drives the hips up to a straight line from shoulders to knees, pauses one second, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a barbell hip thrust: shoulder blades on a flat bench, padded barbell across the hips, feet shoulder-width; drives the hips up to a straight line from shoulders to knees, pauses one second, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лопатки на скамье, штанга на тазу (с подложкой), стопы на ширине плеч. Поднимите таз до прямой линии плечи–колени, сожмите ягодицы на 1 секунду, опустите.",
+  "errors": [
+   "Прогиб в пояснице вверху",
+   "Стопы слишком далеко",
+   "Подъём за счёт спины"
+  ]
  },
  {
   "k": "bridge",
   "n": "Ягодичный мостик",
-  "p": "8-second fitness demonstration video. The figure performs a glute bridge lying on the back on a mat, knees bent, feet near the hips; lifts the hips to a straight line from shoulders to knees, holds one second, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a glute bridge lying on the back on a mat, knees bent, feet near the hips; lifts the hips to a straight line from shoulders to knees, holds one second, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, колени согнуты, стопы у ягодиц. Поднимите таз, сожмите ягодицы, задержитесь 1–2 секунды, опустите.",
+  "errors": [
+   "Прогиб поясницы",
+   "Работа спиной вместо ягодиц"
+  ]
  },
  {
   "k": "legcurl",
   "n": "Сгибания ног в тренажёре",
-  "p": "8-second fitness demonstration video. The figure performs a seated or lying leg curl machine: pad above the heels, knees aligned with the machine pivot; curls the legs fully, then slowly returns. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a seated or lying leg curl machine: pad above the heels, knees aligned with the machine pivot; curls the legs fully, then slowly returns. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Валик над пятками, колени у края сиденья. Согните ноги до упора, медленно верните.",
+  "errors": [
+   "Рывки",
+   "Таз отрывается"
+  ]
  },
  {
   "k": "bench",
   "n": "Жим штанги лёжа",
-  "p": "8-second fitness demonstration video. The figure performs a barbell bench press lying on a flat bench, eyes under the bar, shoulder blades squeezed, feet flat on the floor, grip slightly wider than shoulders; lowers the bar to the lower chest with elbows about 45 degrees from the body, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a barbell bench press lying on a flat bench, eyes under the bar, shoulder blades squeezed, feet flat on the floor, grip slightly wider than shoulders; lowers the bar to the lower chest with elbows about 45 degrees from the body, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на скамье, глаза под грифом, лопатки сведены, стопы на полу. Хват чуть шире плеч. Опустите штангу к низу груди, локти под углом ~45° к телу. Выжмите вверх.",
+  "errors": [
+   "Локти разведены в стороны на 90°",
+   "Отскок штанги от груди",
+   "Таз отрывается от скамьи"
+  ]
  },
  {
   "k": "db_incline",
   "n": "Жим гантелей на наклонной скамье",
-  "p": "8-second fitness demonstration video. The figure performs an incline dumbbell press on a bench set to 30 degrees: dumbbells at shoulder level, presses up over the chest without clanking them together, lowers slowly. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs an incline dumbbell press on a bench set to 30 degrees: dumbbells at shoulder level, presses up over the chest without clanking them together, lowers slowly. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Скамья под 30°, гантели у плеч, лопатки сведены. Выжмите гантели вверх над грудью, медленно опустите.",
+  "errors": [
+   "Слишком большой наклон скамьи",
+   "Гантели бьются вверху"
+  ]
  },
  {
   "k": "pushup",
   "n": "Отжимания",
-  "p": "8-second fitness demonstration video. The figure performs a push-up: hands slightly wider than shoulders, body in one straight line from head to heels; lowers the chest close to the floor with elbows about 45 degrees from the body, then pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a push-up: hands slightly wider than shoulders, body in one straight line from head to heels; lowers the chest close to the floor with elbows about 45 degrees from the body, then pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор лёжа, ладони чуть шире плеч, тело — прямая линия от головы до пяток. Опуститесь грудью к полу, локти под 45° к телу. Выжмите себя вверх.",
+  "errors": [
+   "Провисание таза",
+   "Локти в стороны",
+   "Неполная амплитуда"
+  ]
  },
  {
   "k": "ohp",
   "n": "Жим гантелей сидя вверх",
-  "p": "8-second fitness demonstration video. The figure performs a seated dumbbell shoulder press on a bench with back support: dumbbells at shoulder height, palms forward; presses overhead without touching the dumbbells, lowers to ear level. Two slow reps. Camera: front three-quarter view (45 degrees) at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a seated dumbbell shoulder press on a bench with back support: dumbbells at shoulder height, palms forward; presses overhead without touching the dumbbells, lowers to ear level. Two slow reps. Camera: front three-quarter view (45 degrees) at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Сидя со спинкой, гантели у плеч ладонями вперёд. Выжмите вверх, не соединяя гантели, опустите до уровня ушей.",
+  "errors": [
+   "Прогиб в пояснице",
+   "Слишком тяжёлый вес"
+  ]
  },
  {
   "k": "pike",
   "n": "Отжимания «домиком»",
-  "p": "8-second fitness demonstration video. The figure performs a pike push-up: hips raised high so the body forms an inverted V; bends the arms lowering the top of the head toward the floor between the hands, then pushes back up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a pike push-up: hips raised high so the body forms an inverted V; bends the arms lowering the top of the head toward the floor between the hands, then pushes back up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор лёжа, таз поднят вверх — тело в форме перевёрнутой «V». Согните руки, опуская макушку к полу между ладонями, выжмитесь обратно.",
+  "errors": [
+   "Таз опускается",
+   "Локти в стороны"
+  ]
  },
  {
   "k": "dips",
   "n": "Отжимания на брусьях",
-  "p": "8-second fitness demonstration video. The figure performs parallel bar dips: supported on straight arms, torso leaning slightly forward; lowers until the elbows reach 90 degrees, shoulders down away from the ears, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs parallel bar dips: supported on straight arms, torso leaning slightly forward; lowers until the elbows reach 90 degrees, shoulders down away from the ears, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор на брусьях на прямых руках, корпус слегка вперёд. Опуститесь до угла 90° в локтях, выжмитесь вверх.",
+  "errors": [
+   "Слишком глубокое опускание",
+   "Плечи к ушам"
+  ]
  },
  {
   "k": "latpull",
   "n": "Тяга верхнего блока",
-  "p": "8-second fitness demonstration video. The figure performs a lat pulldown machine seated with thighs under the pads, grip slightly wider than shoulders; pulls the bar to the upper chest squeezing the shoulder blades, torso still, then slowly returns. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a lat pulldown machine seated with thighs under the pads, grip slightly wider than shoulders; pulls the bar to the upper chest squeezing the shoulder blades, torso still, then slowly returns. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Сидя, бёдра под валиком, хват чуть шире плеч. Тяните рукоять к верху груди, сводя лопатки. Медленно верните.",
+  "errors": [
+   "Тяга за голову",
+   "Раскачка корпусом",
+   "Работа только руками"
+  ]
  },
  {
   "k": "row_cable",
   "n": "Тяга горизонтального блока",
-  "p": "8-second fitness demonstration video. The figure performs a seated cable row: back straight, knees slightly bent; pulls the handle to the stomach with elbows close to the body squeezing the shoulder blades, then slowly returns without rocking. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a seated cable row: back straight, knees slightly bent; pulls the handle to the stomach with elbows close to the body squeezing the shoulder blades, then slowly returns without rocking. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Сидя, спина прямая, колени чуть согнуты. Тяните рукоять к животу, сводя лопатки, локти вдоль тела. Медленно верните.",
+  "errors": [
+   "Раскачка корпусом",
+   "Округлённая спина"
+  ]
  },
  {
   "k": "row_db",
   "n": "Тяга гантели в наклоне",
-  "p": "8-second fitness demonstration video. The figure performs a one-arm dumbbell row: one knee and one hand on a flat bench, back flat and parallel to the floor; pulls the dumbbell to the hip with the elbow close to the body, no torso rotation, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a one-arm dumbbell row: one knee and one hand on a flat bench, back flat and parallel to the floor; pulls the dumbbell to the hip with the elbow close to the body, no torso rotation, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Колено и ладонь на скамье (или стуле), спина параллельна полу, гантель в свободной руке. Тяните гантель к поясу, локоть вдоль тела. Опустите.",
+  "errors": [
+   "Поворот корпуса",
+   "Рывок"
+  ]
  },
  {
   "k": "row_bag",
   "n": "Тяга рюкзака в наклоне",
-  "p": "8-second fitness demonstration video. The figure performs a bent-over row holding a backpack with both hands: torso hinged about 45 degrees with a straight back; pulls the backpack to the waist squeezing the shoulder blades, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a bent-over row holding a backpack with both hands: torso hinged about 45 degrees with a straight back; pulls the backpack to the waist squeezing the shoulder blades, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Наклон корпуса ~45°, спина прямая, рюкзак (или бутылки) в руках. Тяните к поясу, сводя лопатки. Опустите.",
+  "errors": [
+   "Округлённая спина",
+   "Работа только руками"
+  ]
  },
  {
   "k": "pullup",
   "n": "Подтягивания",
-  "p": "8-second fitness demonstration video. The figure performs a pull-up: hanging from a bar with a grip slightly wider than shoulders; pulls up until the chin is above the bar without swinging, then lowers to full arm extension. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a pull-up: hanging from a bar with a grip slightly wider than shoulders; pulls up until the chin is above the bar without swinging, then lowers to full arm extension. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Вис на перекладине, хват чуть шире плеч. Сведите лопатки и подтянитесь, пока подбородок не выше перекладины. Опуститесь полностью.",
+  "errors": [
+   "Раскачка",
+   "Неполная амплитуда"
+  ]
  },
  {
   "k": "aussie",
   "n": "Австралийские подтягивания",
-  "p": "8-second fitness demonstration video. The figure performs an inverted row (Australian pull-up) under a low horizontal bar: body straight from head to heels, heels on the floor; pulls the chest to the bar squeezing the shoulder blades, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs an inverted row (Australian pull-up) under a low horizontal bar: body straight from head to heels, heels on the floor; pulls the chest to the bar squeezing the shoulder blades, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Под низкой перекладиной (или под прочным столом), тело прямое, пятки на полу. Подтяните грудь к перекладине, сводя лопатки. Опуститесь.",
+  "errors": [
+   "Провисание таза"
+  ]
  },
  {
   "k": "curl",
   "n": "Сгибания рук с гантелями",
-  "p": "8-second fitness demonstration video. The figure performs a standing dumbbell biceps curl: dumbbells hanging at the sides, elbows fixed against the torso; curls the dumbbells up without swinging, lowers slowly. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a standing dumbbell biceps curl: dumbbells hanging at the sides, elbows fixed against the torso; curls the dumbbells up without swinging, lowers slowly. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя, гантели в опущенных руках, локти у корпуса. Согните руки, не двигая локтями, медленно опустите.",
+  "errors": [
+   "Раскачка корпусом",
+   "Локти уходят вперёд"
+  ]
  },
  {
   "k": "pushdown",
   "n": "Разгибания рук на блоке",
-  "p": "8-second fitness demonstration video. The figure performs a cable triceps pushdown standing at a cable station: elbows pinned to the sides; extends the arms fully downward, slowly returns to 90 degrees. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a cable triceps pushdown standing at a cable station: elbows pinned to the sides; extends the arms fully downward, slowly returns to 90 degrees. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя у блока, локти прижаты к корпусу. Разогните руки вниз до конца, медленно верните до 90°.",
+  "errors": [
+   "Локти гуляют",
+   "Наклон всем телом"
+  ]
  },
  {
   "k": "chairdip",
   "n": "Отжимания от стула (обратные)",
-  "p": "8-second fitness demonstration video. The figure performs a bench dip using a sturdy chair behind the body: hands on the chair edge, legs extended forward; bends the elbows to 90 degrees keeping shoulders down, presses back up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a bench dip using a sturdy chair behind the body: hands on the chair edge, legs extended forward; bends the elbows to 90 degrees keeping shoulders down, presses back up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Ладони на краю устойчивого стула за спиной, ноги вперёд. Согните руки до 90°, выжмитесь вверх.",
+  "errors": [
+   "Слишком глубоко",
+   "Плечи к ушам"
+  ]
  },
  {
   "k": "lateral",
   "n": "Махи гантелями в стороны",
-  "p": "8-second fitness demonstration video. The figure performs a standing dumbbell lateral raise with light dumbbells, elbows slightly bent; raises the arms out to the sides to shoulder height without shrugging, lowers slowly. Two slow reps. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a standing dumbbell lateral raise with light dumbbells, elbows slightly bent; raises the arms out to the sides to shoulder height without shrugging, lowers slowly. Two slow reps. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя, лёгкие гантели у бёдер, локти чуть согнуты. Поднимите руки в стороны до уровня плеч, медленно опустите.",
+  "errors": [
+   "Рывки",
+   "Плечи к ушам",
+   "Слишком тяжёлые гантели"
+  ]
  },
  {
   "k": "plank",
   "n": "Планка",
-  "p": "8-second fitness demonstration video. The figure performs a forearm plank: elbows under the shoulders, body in one straight line from head to heels, core braced, holding still for the whole clip. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a forearm plank: elbows under the shoulders, body in one straight line from head to heels, core braced, holding still for the whole clip. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор на предплечьях, локти под плечами, тело — прямая линия. Держите положение, втянув живот и сжав ягодицы.",
+  "errors": [
+   "Провисание поясницы",
+   "Таз слишком высоко"
+  ]
  },
  {
   "k": "sideplank",
   "n": "Боковая планка",
-  "p": "8-second fitness demonstration video. The figure performs a side plank on one forearm, feet stacked, hips lifted in a straight line with the body, holding still. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a side plank on one forearm, feet stacked, hips lifted in a straight line with the body, holding still. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на боку, упор на предплечье, ноги вместе. Поднимите таз в линию с телом, держите. Затем другая сторона.",
+  "errors": [
+   "Таз провисает"
+  ]
  },
  {
   "k": "deadbug",
   "n": "Мёртвый жук",
-  "p": "8-second fitness demonstration video. The figure performs a dead bug exercise lying on the back: arms pointing up, knees bent 90 degrees above the hips, lower back pressed to the mat; slowly extends the opposite arm and leg toward the floor and returns, then switches sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a dead bug exercise lying on the back: arms pointing up, knees bent 90 degrees above the hips, lower back pressed to the mat; slowly extends the opposite arm and leg toward the floor and returns, then switches sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, руки вверх, ноги согнуты под 90°. Поясница прижата к полу. Медленно опустите противоположные руку и ногу, не отрывая поясницу. Вернитесь, смените сторону.",
+  "errors": [
+   "Поясница отрывается от пола",
+   "Спешка"
+  ]
  },
  {
   "k": "superman",
   "n": "Супермен",
-  "p": "8-second fitness demonstration video. The figure performs a superman exercise lying face down with arms extended forward: lifts arms and legs a few centimeters off the floor, holds two seconds with the head neutral, lowers. Two reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a superman exercise lying face down with arms extended forward: lifts arms and legs a few centimeters off the floor, holds two seconds with the head neutral, lowers. Two reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на животе, руки вытянуты вперёд. Одновременно приподнимите руки и ноги на 5–10 см, задержитесь 2 секунды, опустите.",
+  "errors": [
+   "Запрокидывание головы",
+   "Слишком высокий подъём"
+  ]
  },
  {
   "k": "bike",
   "n": "Велотренажёр или эллипс",
-  "p": "8-second fitness demonstration video. The figure performs riding a stationary exercise bike at a steady moderate pace, seat height set so the leg is almost straight at the bottom of the pedal stroke, upright posture. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs riding a stationary exercise bike at a steady moderate pace, seat height set so the leg is almost straight at the bottom of the pedal stroke, upright posture. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Отрегулируйте сиденье: нога почти прямая в нижней точке. Ровный темп, при котором можно говорить короткими фразами.",
+  "errors": [
+   "Слишком высокое сопротивление в начале"
+  ]
  },
  {
   "k": "walk",
   "n": "Быстрая ходьба",
-  "p": "8-second fitness demonstration video. The figure performs brisk walking on a treadmill with an upright posture and natural arm swing. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs brisk walking on a treadmill with an upright posture and natural arm swing. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Удобная обувь, ровная поверхность или дорожка. Темп, при котором дыхание учащено, но можно говорить.",
+  "errors": [
+   "Слишком медленно — это прогулка, а не тренировка"
+  ]
  },
  {
   "k": "intervals",
   "n": "Интервальный бег",
-  "p": "8-second fitness demonstration video. The figure performs outdoor-style interval running on a treadmill: transitions from brisk walking into fast running with upright posture and relaxed shoulders. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs outdoor-style interval running on a treadmill: transitions from brisk walking into fast running with upright posture and relaxed shoulders. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Разминка 5 минут шагом. 30 секунд быстрого бега, 90 секунд шага. Повторить 6–8 раз.",
+  "errors": [
+   "Слишком быстро в первых интервалах"
+  ]
  },
  {
   "k": "catcow",
   "n": "Кошка-корова",
-  "p": "8-second fitness demonstration video. The figure performs the cat-cow mobility exercise on all fours on a mat, hands under shoulders, knees under hips; slowly arches the back with chest forward, then rounds the spine upward. Two slow cycles. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs the cat-cow mobility exercise on all fours on a mat, hands under shoulders, knees under hips; slowly arches the back with chest forward, then rounds the spine upward. Two slow cycles. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "На четвереньках, ладони под плечами. Плавно прогибайте и округляйте спину 10 раз.",
+  "errors": [
+   "Резкие движения"
+  ]
  },
  {
   "k": "hipflex",
   "n": "Растяжка сгибателей бедра",
-  "p": "8-second fitness demonstration video. The figure performs a kneeling hip flexor stretch: half-kneeling lunge with the back knee on a mat; gently shifts the hips forward keeping the torso upright and holds. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a kneeling hip flexor stretch: half-kneeling lunge with the back knee on a mat; gently shifts the hips forward keeping the torso upright and holds. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Выпад, заднее колено на полу. Подайте таз вперёд, держите 30–40 секунд на каждую ногу.",
+  "errors": [
+   "Прогиб в пояснице"
+  ]
  },
  {
   "k": "hamstr",
   "n": "Растяжка задней поверхности бедра",
-  "p": "8-second fitness demonstration video. The figure performs a lying hamstring stretch on a mat: lying on the back, one straight leg raised with a towel around the foot, gently pulling the leg toward the body and holding, other leg flat. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a lying hamstring stretch on a mat: lying on the back, one straight leg raised with a towel around the foot, gently pulling the leg toward the body and holding, other leg flat. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, одна нога вверх (можно с полотенцем). Тяните ногу к себе до лёгкого натяжения, 30–40 секунд.",
+  "errors": [
+   "Боль — растяжение должно быть комфортным"
+  ]
  },
  {
   "k": "chest_str",
   "n": "Растяжка груди у стены",
-  "p": "8-second fitness demonstration video. The figure performs a doorway chest stretch: forearm placed on a wall at shoulder height, slowly rotates the torso away from the wall and holds. Camera: front three-quarter view (45 degrees) at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a doorway chest stretch: forearm placed on a wall at shoulder height, slowly rotates the torso away from the wall and holds. Camera: front three-quarter view (45 degrees) at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Предплечье на стене (дверном проёме) на уровне плеча. Поверните корпус от стены до натяжения в груди, 30 секунд на сторону.",
+  "errors": [
+   "Рывки"
+  ]
  },
  {
   "k": "pushup_knee",
   "n": "Отжимания с колен",
-  "p": "8-second fitness demonstration video. The figure performs a knee push-up on a mat: hands slightly wider than shoulders, knees on the floor, body straight from head to knees; lowers the chest close to the floor with elbows about 45 degrees, then pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a knee push-up on a mat: hands slightly wider than shoulders, knees on the floor, body straight from head to knees; lowers the chest close to the floor with elbows about 45 degrees, then pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор на ладони и колени, ладони чуть шире плеч, тело — прямая линия от головы до колен. Опуститесь грудью почти до пола, локти под 45° к телу. Выжмите себя вверх.",
+  "errors": [
+   "Таз поднят вверх",
+   "Локти разведены в стороны",
+   "Голова опущена вниз"
+  ]
  },
  {
   "k": "pushup_incline",
   "n": "Отжимания от стола или скамейки",
-  "p": "8-second fitness demonstration video. The figure performs an incline push-up with hands on the edge of a sturdy table, body straight from head to heels; lowers the chest to the table edge with elbows about 45 degrees, then pushes back. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs an incline push-up with hands on the edge of a sturdy table, body straight from head to heels; lowers the chest to the table edge with elbows about 45 degrees, then pushes back. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Ладони на краю устойчивого стола (на улице — скамейки), тело прямое, ноги назад. Опустите грудь к краю опоры, локти под 45°. Выжмите себя обратно.",
+  "errors": [
+   "Провисание таза",
+   "Локти в стороны",
+   "Опора шатается"
+  ]
  },
  {
   "k": "pushup_diamond",
   "n": "Узкие отжимания",
-  "p": "8-second fitness demonstration video. The figure performs a close-grip push-up with hands close together under the chest, elbows tucked tight to the body, body straight; lowers and pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a close-grip push-up with hands close together under the chest, elbows tucked tight to the body, body straight; lowers and pushes up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор лёжа, ладони близко друг к другу под грудью, тело прямое. Опуститесь, прижимая локти к корпусу. Выжмите себя вверх.",
+  "errors": [
+   "Локти уходят в стороны",
+   "Провисание таза"
+  ]
  },
  {
   "k": "split_squat",
   "n": "Болгарские выпады",
-  "p": "8-second fitness demonstration video. The figure performs a Bulgarian split squat: rear foot resting on a chair behind, front foot one long step forward; lowers straight down until the front thigh is almost parallel to the floor, torso upright, front knee over the ankle, then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a Bulgarian split squat: rear foot resting on a chair behind, front foot one long step forward; lowers straight down until the front thigh is almost parallel to the floor, torso upright, front knee over the ankle, then stands up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Спиной к стулу (дивану, скамейке), подъём задней стопы на опоре, передняя нога на шаг вперёд. Опуститесь вниз, пока бедро передней ноги не станет почти параллельно полу. Поднимитесь, толкая пол передней пяткой.",
+  "errors": [
+   "Переднее колено уходит внутрь",
+   "Слишком короткий шаг — колено далеко за носком",
+   "Корпус падает вперёд"
+  ]
  },
  {
   "k": "stepup",
   "n": "Зашагивания на стул или скамейку",
-  "p": "8-second fitness demonstration video. The figure performs a step-up onto a sturdy chair: one whole foot on the chair, steps up driving through the top leg without pushing off the bottom leg, stands tall, then slowly steps down. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a step-up onto a sturdy chair: one whole foot on the chair, steps up driving through the top leg without pushing off the bottom leg, stands tall, then slowly steps down. One rep each leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Перед устойчивым стулом или скамейкой высотой до колена, одна стопа целиком на опоре. Встаньте на опору за счёт верхней ноги, не отталкиваясь нижней. Медленно опуститесь. Смените ногу.",
+  "errors": [
+   "Толчок нижней ногой",
+   "Колено уходит внутрь",
+   "Опора шатается"
+  ]
  },
  {
   "k": "sumo_squat",
   "n": "Сумо-приседания",
-  "p": "8-second fitness demonstration video. The figure performs a sumo squat: wide stance with toes turned out 45 degrees, hands clasped in front of the chest; lowers with knees pushed out over the toes and an upright torso, then stands up squeezing the glutes. Two slow reps. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a sumo squat: wide stance with toes turned out 45 degrees, hands clasped in front of the chest; lowers with knees pushed out over the toes and an upright torso, then stands up squeezing the glutes. Two slow reps. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стопы широко, носки развёрнуты наружу на 45°, руки перед грудью. Опуститесь вниз, разводя колени по линии носков. Корпус прямой. Поднимитесь, сжимая ягодицы.",
+  "errors": [
+   "Колени сводятся внутрь",
+   "Наклон корпуса вперёд",
+   "Пятки отрываются"
+  ]
  },
  {
   "k": "side_lunge",
   "n": "Выпады в сторону",
-  "p": "8-second fitness demonstration video. The figure performs a side lunge: from standing, takes a wide step to the side and sits the hips back over that leg while the other leg stays straight, chest up, then pushes back to standing. One rep each side. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a side lunge: from standing, takes a wide step to the side and sits the hips back over that leg while the other leg stays straight, chest up, then pushes back to standing. One rep each side. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя, стопы вместе, руки перед грудью. Широкий шаг в сторону, таз назад, опуститесь на эту ногу, вторая прямая. Вернитесь. Чередуйте стороны.",
+  "errors": [
+   "Колено уходит внутрь",
+   "Пятка отрывается",
+   "Круглая спина"
+  ]
  },
  {
   "k": "wallsit",
   "n": "Стульчик у стены",
-  "p": "8-second fitness demonstration video. The figure performs a wall sit: back flat against a plain wall, knees bent at 90 degrees like sitting on an invisible chair, arms relaxed at the sides, holding still for the whole clip. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a wall sit: back flat against a plain wall, knees bent at 90 degrees like sitting on an invisible chair, arms relaxed at the sides, holding still for the whole clip. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Спина прижата к стене, стопы на шаг впереди. Сползите вниз до угла 90° в коленях, как будто сидите на стуле. Держите.",
+  "errors": [
+   "Колени выходят за носки",
+   "Слишком высоко",
+   "Руки упираются в бёдра"
+  ]
  },
  {
   "k": "calf",
   "n": "Подъёмы на носки",
-  "p": "8-second fitness demonstration video. The figure performs a calf raise on the edge of a step, one hand lightly touching a wall: rises high onto the toes, pauses, then slowly lowers the heels below the step. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a calf raise on the edge of a step, one hand lightly touching a wall: rises high onto the toes, pauses, then slowly lowers the heels below the step. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя на краю ступеньки (или на полу), держитесь рукой за стену. Поднимитесь на носки как можно выше, задержитесь на секунду, медленно опустите пятки ниже ступеньки.",
+  "errors": [
+   "Рывки и пружинистость",
+   "Неполная амплитуда"
+  ]
  },
  {
   "k": "glute_kick",
   "n": "Отведение ноги назад на четвереньках",
-  "p": "8-second fitness demonstration video. The figure performs a donkey kick on all fours on a mat: hands under shoulders, knees under hips, flat back; lifts one bent leg with the sole of the foot toward the ceiling up to back level, then lowers. Two reps, then the other leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a donkey kick on all fours on a mat: hands under shoulders, knees under hips, flat back; lifts one bent leg with the sole of the foot toward the ceiling up to back level, then lowers. Two reps, then the other leg. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "На четвереньках: ладони под плечами, колени под тазом, спина ровная. Поднимите согнутую ногу пяткой к потолку до линии спины, сожмите ягодицу. Опустите. Затем другая нога.",
+  "errors": [
+   "Прогиб в пояснице",
+   "Поворот таза в сторону",
+   "Рывки"
+  ]
  },
  {
   "k": "bridge_single",
   "n": "Ягодичный мост на одной ноге",
-  "p": "8-second fitness demonstration video. The figure performs a single-leg glute bridge lying on the back on a mat: one foot planted near the hips, the other leg extended straight up; lifts the hips to a straight line from shoulders to knee, pauses, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a single-leg glute bridge lying on the back on a mat: one foot planted near the hips, the other leg extended straight up; lifts the hips to a straight line from shoulders to knee, pauses, lowers. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, одна нога согнута, стопа у ягодиц, вторая вытянута вверх. Поднимите таз за счёт опорной ноги до прямой линии плечи–колено, задержитесь. Опустите. Смените ногу.",
+  "errors": [
+   "Таз перекашивается",
+   "Прогиб в пояснице"
+  ]
  },
  {
   "k": "door_row",
   "n": "Тяга полотенца у двери",
-  "p": "8-second fitness demonstration video. The figure performs a towel row at a closed door: holding both ends of a towel looped around the door handles, feet near the door, body leaning back on straight arms in a straight line; pulls the chest toward the door squeezing the shoulder blades, then slowly lowers back. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a towel row at a closed door: holding both ends of a towel looped around the door handles, feet near the door, body leaning back on straight arms in a straight line; pulls the chest toward the door squeezing the shoulder blades, then slowly lowers back. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Полотенце через ручки закрытой прочной двери (или вокруг столба), держите концы, стопы у двери, тело отклонено назад на прямых руках. Подтяните грудь к двери, сводя лопатки. Медленно опуститесь.",
+  "errors": [
+   "Таз провисает",
+   "Тянут только руками без лопаток",
+   "Ненадёжная опора — проверьте дверь"
+  ]
  },
  {
   "k": "ytw",
   "n": "Подъёмы рук Y-T лёжа",
-  "p": "8-second fitness demonstration video. The figure performs a prone Y-T raise lying face down on a mat with forehead resting: arms extended overhead in a Y shape lift a few centimeters squeezing the shoulder blades, lower, then arms out to the sides in a T shape lift and lower. Slow and controlled. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a prone Y-T raise lying face down on a mat with forehead resting: arms extended overhead in a Y shape lift a few centimeters squeezing the shoulder blades, lower, then arms out to the sides in a T shape lift and lower. Slow and controlled. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на животе, лоб на полотенце, руки вытянуты вперёд буквой Y. Сведите лопатки и поднимите руки на 5–10 см, задержитесь 2 секунды. Затем разведите руки в стороны буквой T и повторите.",
+  "errors": [
+   "Поднимается голова",
+   "Плечи к ушам",
+   "Рывки"
+  ]
  },
  {
   "k": "bench_dip",
   "n": "Обратные отжимания от скамейки",
-  "p": "8-second fitness demonstration video. The figure performs a bench dip on a park bench: hands on the bench edge behind the hips, knees bent, feet on the ground; bends the elbows to 90 degrees lowering the hips, shoulders down, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a bench dip on a park bench: hands on the bench edge behind the hips, knees bent, feet on the ground; bends the elbows to 90 degrees lowering the hips, shoulders down, then presses up. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Ладони на краю скамейки (дома — стула) за спиной, ноги согнуты, стопы на земле. Согните руки до 90°, опуская таз вниз. Выжмитесь вверх.",
+  "errors": [
+   "Слишком глубоко",
+   "Плечи поднимаются к ушам",
+   "Локти в стороны"
+  ]
  },
  {
   "k": "knee_raise",
   "n": "Подъём коленей в висе",
-  "p": "8-second fitness demonstration video. The figure performs a hanging knee raise on a pull-up bar: hanging with engaged shoulders, raises the knees to the chest with a slight pelvic tilt, then lowers slowly without swinging. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a hanging knee raise on a pull-up bar: hanging with engaged shoulders, raises the knees to the chest with a slight pelvic tilt, then lowers slowly without swinging. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Вис на турнике, плечи напряжены (не висите «мешком»). Подтяните колени к груди, слегка скручивая таз. Медленно опустите без раскачки.",
+  "errors": [
+   "Раскачка",
+   "Ноги бросаются вниз"
+  ]
  },
  {
   "k": "mountain",
   "n": "Скалолаз",
-  "p": "8-second fitness demonstration video. The figure performs mountain climbers in a straight-arm plank: alternately drives the knees toward the chest at a steady moderate pace, hips level, hands under shoulders. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs mountain climbers in a straight-arm plank: alternately drives the knees toward the chest at a steady moderate pace, hips level, hands under shoulders. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор лёжа на прямых руках, тело прямое. Поочерёдно подтягивайте колени к груди в ровном темпе, таз не поднимайте.",
+  "errors": [
+   "Таз поднят вверх",
+   "Плечи уходят назад от ладоней"
+  ]
  },
  {
   "k": "bicycle",
   "n": "Велосипед (скручивания)",
-  "p": "8-second fitness demonstration video. The figure performs bicycle crunches lying on the back on a mat: hands lightly behind the head, lower back pressed down; slowly brings one elbow toward the opposite knee while the other leg extends, alternating sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs bicycle crunches lying on the back on a mat: hands lightly behind the head, lower back pressed down; slowly brings one elbow toward the opposite knee while the other leg extends, alternating sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, руки за головой (не тяните шею), ноги подняты, поясница прижата. Тянитесь локтем к противоположному колену, вторая нога выпрямляется. Смена сторон медленно.",
+  "errors": [
+   "Тянут голову руками",
+   "Поясница отрывается",
+   "Слишком быстро"
+  ]
  },
  {
   "k": "leg_raise",
   "n": "Подъёмы ног лёжа",
-  "p": "8-second fitness demonstration video. The figure performs a lying leg raise on a mat: hands by the sides, lower back pressed to the floor; raises straight legs to vertical, then slowly lowers them close to the floor without touching. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a lying leg raise on a mat: hands by the sides, lower back pressed to the floor; raises straight legs to vertical, then slowly lowers them close to the floor without touching. Two slow reps. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Лёжа на спине, руки вдоль тела или под ягодицами, поясница прижата к полу. Поднимите ноги до вертикали, медленно опустите, не касаясь пола и не отрывая поясницу.",
+  "errors": [
+   "Поясница отрывается",
+   "Ноги падают вниз"
+  ]
  },
  {
   "k": "bird_dog",
   "n": "Птица-собака",
-  "p": "8-second fitness demonstration video. The figure performs a bird dog exercise on all fours on a mat: flat back, extends the opposite arm and leg straight in line with the back, holds two seconds, returns, then switches sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a bird dog exercise on all fours on a mat: flat back, extends the opposite arm and leg straight in line with the back, holds two seconds, returns, then switches sides. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "На четвереньках, спина ровная, взгляд в пол. Вытяните одновременно противоположные руку и ногу в линию со спиной, задержитесь 2 секунды. Вернитесь, смените сторону.",
+  "errors": [
+   "Прогиб в пояснице",
+   "Таз поворачивается",
+   "Спешка"
+  ]
  },
  {
   "k": "shoulder_tap",
   "n": "Планка с касанием плеч",
-  "p": "8-second fitness demonstration video. The figure performs a plank shoulder tap in a straight-arm plank with feet slightly apart: alternately touches each hand to the opposite shoulder while keeping the hips completely still. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a plank shoulder tap in a straight-arm plank with feet slightly apart: alternately touches each hand to the opposite shoulder while keeping the hips completely still. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Упор лёжа на прямых руках, стопы чуть шире плеч. Поочерёдно касайтесь ладонью противоположного плеча, не раскачивая таз.",
+  "errors": [
+   "Таз раскачивается",
+   "Провисание поясницы"
+  ]
  },
  {
   "k": "jumping_jacks",
   "n": "Прыжки «звёздочка»",
-  "p": "8-second fitness demonstration video. The figure performs jumping jacks: jumps the feet out wide while raising the arms overhead, then jumps back to feet together and arms down, landing softly on the balls of the feet, steady rhythm. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs jumping jacks: jumps the feet out wide while raising the arms overhead, then jumps back to feet together and arms down, landing softly on the balls of the feet, steady rhythm. Camera: straight-on front view at chest height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя, ноги вместе, руки вдоль тела. Прыжком разведите ноги и поднимите руки над головой, прыжком вернитесь. Мягко на носках.",
+  "errors": [
+   "Жёсткое приземление на пятки",
+   "Слишком быстро в начале"
+  ]
  },
  {
   "k": "burpee",
   "n": "Бёрпи",
-  "p": "8-second fitness demonstration video. The figure performs a burpee: squats and places hands on the floor, jumps the feet back into a straight plank, jumps the feet back to the hands, then jumps up with arms overhead and lands softly. Two reps at a controlled pace. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people."
+  "p": "8-second fitness demonstration video. The figure performs a burpee: squats and places hands on the floor, jumps the feet back into a straight plank, jumps the feet back to the hands, then jumps up with arms overhead and lands softly. Two reps at a controlled pace. Camera: exact side profile view at hip height, about 4 meters away. Exactly one figure in the scene, no mirror, no reflection, no second person. Style: a faceless, featureless mannequin figure with a smooth matte light-grey surface, no face, no hair, no skin details, athletic proportions, wearing a plain black t-shirt and black shorts. Plain dark charcoal studio, soft even lighting, clean floor, static locked-off camera on a tripod, the full body always in frame, real-time speed, controlled tempo, anatomically correct technique. No text, no logos, no music, no voice, no other people.",
+  "tech": "Стоя. Присед, ладони на пол, прыжком ноги назад в планку, отжимание по желанию, прыжком ноги к рукам, выпрыгивание вверх.",
+  "errors": [
+   "Провисание поясницы в планке",
+   "Жёсткое приземление"
+  ]
  }
 ]
