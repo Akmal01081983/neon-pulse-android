@@ -9,11 +9,9 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -32,14 +30,14 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Один экран и одна главная кнопка за раз:
- * «Войти через Google» → «Разрешить доступ» к данным часов → готово: отчёт, тренер, чат — всё в приложении.
- * Telegram не нужен; вход через Telegram и привязка бота — по желанию (оплата Stars, отчёт в боте).
+ * Приложение работает само по себе, без Telegram:
+ * «Начать» (аккаунт на этом телефоне) → «Разрешить доступ» к данным часов → отчёт, тренер, питание, чат.
+ * Вход через Google — по желанию, чтобы перенести аккаунт на другой телефон.
+ * Telegram открывается только для оплаты (Stars): одноразовая ссылка, счёт на этот аккаунт.
  */
 class MainActivity : ComponentActivity() {
     /** Текст на языке телефона: русский, узбекский или английский */
@@ -49,6 +47,7 @@ class MainActivity : ComponentActivity() {
     private val CARD = Color.parseColor("#151B23")
     private val DIM = Color.parseColor("#8A94A6")
     private val prefs by lazy { getSharedPreferences("neon", MODE_PRIVATE) }
+    private val googleOn get() = BuildConfig.GOOGLE_CLIENT_ID.isNotEmpty()
 
     private lateinit var title: TextView
     private lateinit var info: TextView
@@ -57,10 +56,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var btn3: Button
     private lateinit var link1: TextView
     private lateinit var link2: TextView
-    private lateinit var extra: LinearLayout
     private var busy = false
 
-    // Android 13+: разрешение на уведомления (утренний отчёт приходит прямо на телефон)
+    // Android 13+: разрешение на уведомления (утренний отчёт и итоги недели приходят прямо на телефон)
     private val notifLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     private val permLauncher = registerForActivityResult(PermissionController.createRequestPermissionResultContract()) {
@@ -77,7 +75,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() { super.onResume(); lifecycleScope.launch { step() } }
 
-    /** Запасной путь: ссылка neonpulse://connect?t=КЛЮЧ со страницы подключения */
+    /** Ссылка neonpulse://connect?t=КЛЮЧ — подключить телефон к уже существующему аккаунту (со страницы подключения часов) */
     private fun handleLink(i: Intent?) {
         val t = i?.data?.getQueryParameter("t") ?: return
         if (HealthSync.validToken(t)) HealthSync.setToken(this, t)
@@ -86,31 +84,17 @@ class MainActivity : ComponentActivity() {
     /** Определяем, на каком шаге человек, и показываем нужные кнопки */
     private suspend fun step() {
         if (busy) return
-        // Вход через Telegram начат: забираем ключ (сервер мог ответить не сразу)
-        if (HealthSync.token(this) == null && HealthSync.nonce(this) != null) {
-            show(t("Подключаю…", "Ulanmoqda…", "Connecting…"), t("Проверяю Telegram", "Telegramni tekshiryapman", "Checking Telegram"))
-            busy = true
-            repeat(8) { if (HealthSync.token(this) == null && !withContext(Dispatchers.IO) { HealthSync.claim(this@MainActivity) }) delay(1500) }
-            busy = false
-        }
-        // 1. Вход
+        // 1. Нет аккаунта: «Начать» — сразу, без регистрации; Google — вернуть аккаунт с другого телефона
         if (HealthSync.token(this) == null) {
             show("Neon Pulse", t(
-                "Сон, восстановление, нагрузка, тренер и питание — по данным ваших часов.\n\nВойдите, чтобы начать.",
-                "Uyqu, tiklanish, yuklama, murabbiy va ovqatlanish — soatingiz maʼlumotlari asosida.\n\nBoshlash uchun kiring.",
-                "Sleep, recovery, strain, a personal trainer and nutrition — from your watch data.\n\nSign in to start."))
-            if (BuildConfig.GOOGLE_CLIENT_ID.isNotEmpty()) {
-                button(mainBtn, t("Войти через Google", "Google orqali kirish", "Sign in with Google")) { googleSignIn() }
-                button(btn2, t("Войти через Telegram", "Telegram orqali kirish", "Sign in with Telegram")) { telegramSignIn() }
-            } else {
-                // ID клиента Google ещё не задан в сборке — остаётся вход через Telegram
-                button(mainBtn, t("Войти через Telegram", "Telegram orqali kirish", "Sign in with Telegram")) { telegramSignIn() }
-            }
+                "Сон, восстановление, нагрузка, тренер и питание — по данным ваших часов.",
+                "Uyqu, tiklanish, yuklama, murabbiy va ovqatlanish — soatingiz maʼlumotlari asosida.",
+                "Sleep, recovery, strain, a personal trainer and nutrition — from your watch data."))
+            button(mainBtn, t("Начать", "Boshlash", "Get started")) { start() }
+            if (googleOn) button(btn2, t("У меня есть аккаунт — войти через Google", "Akkauntim bor — Google orqali kirish", "I have an account — sign in with Google")) { googleSignIn() }
             textLink(link2, t("Политика конфиденциальности", "Maxfiylik siyosati", "Privacy policy")) { openUrl(privacyUrl()) }
-            extra.visibility = View.VISIBLE
             return
         }
-        extra.visibility = View.GONE
         val skipWatch = prefs.getBoolean("skip_watch", false)
         // 2. Health Connect (можно пропустить: тренер, питание и чат работают и без часов)
         if (!skipWatch && !HealthSync.available(this)) {
@@ -133,8 +117,8 @@ class MainActivity : ComponentActivity() {
             skipLink()
             return
         }
-        // 4. Готово: всё в приложении
-        if (!skipWatch) SyncWorker.schedule(this)
+        // 4. Готово: всё в приложении. Фоновая работа — отправка данных часов и «входящие» (итоги недели, оплата)
+        SyncWorker.schedule(this)
         Notifier.channel(this)
         if (Build.VERSION.SDK_INT >= 33 && !Notifier.allowed(this) && !prefs.getBoolean("notif_asked", false)) {
             prefs.edit().putBoolean("notif_asked", true).apply()
@@ -151,7 +135,7 @@ class MainActivity : ComponentActivity() {
         if (skipWatch) textLink(link1, t("⌚ Подключить часы", "⌚ Soatni ulash", "⌚ Connect a watch")) {
             prefs.edit().putBoolean("skip_watch", false).apply(); lifecycleScope.launch { step() }
         }
-        textLink(link2, t("⚙️ Аккаунт", "⚙️ Akkaunt", "⚙️ Account")) { accountMenu() }
+        textLink(link2, t("⚙️ Аккаунт и оплата", "⚙️ Akkaunt va toʻlov", "⚙️ Account & payment")) { accountMenu() }
     }
 
     /** «Позже» на шагах часов: пользоваться тренером, питанием и чатом без часов */
@@ -175,7 +159,24 @@ class MainActivity : ComponentActivity() {
     }
 
     // ===== Вход =====
-    /** Вход через Google: системное окно выбора аккаунта → токен → сервер выдаёт ключ приложения */
+    /** «Начать»: аккаунт на этом телефоне, без регистрации */
+    private fun start() {
+        lifecycleScope.launch {
+            busy = true
+            show(t("Создаю аккаунт…", "Akkaunt yaratilmoqda…", "Creating your account…"), "")
+            val err = withContext(Dispatchers.IO) { HealthSync.register(this@MainActivity) }
+            busy = false
+            when (err) {
+                null -> {}
+                "google" -> toast(t("На этом телефоне уже был аккаунт с Google — войдите через Google", "Bu telefonda Google bilan akkaunt bor edi — Google orqali kiring", "This phone already had a Google account — sign in with Google"))
+                "network" -> toast(t("Нет интернета — попробуйте ещё раз", "Internet yoʻq — qayta urinib koʻring", "No internet — please try again"))
+                else -> toast(t("Не получилось — попробуйте ещё раз", "Boʻlmadi — qayta urinib koʻring", "Didn’t work — please try again"))
+            }
+            step()
+        }
+    }
+
+    /** Вход через Google: системное окно выбора аккаунта → токен → сервер выдаёт ключ приложения (или привязывает Google к текущему) */
     private fun googleSignIn() {
         lifecycleScope.launch {
             busy = true
@@ -192,7 +193,8 @@ class MainActivity : ComponentActivity() {
             } catch (e: GetCredentialCancellationException) { "cancel" } catch (e: Exception) { "google" }
             busy = false
             when (err) {
-                null, "cancel" -> {}
+                null -> toast(t("✅ Аккаунт сохранён в Google", "✅ Akkaunt Google da saqlandi", "✅ Account saved to Google"))
+                "cancel" -> {}
                 "network" -> toast(t("Нет интернета — попробуйте ещё раз", "Internet yoʻq — qayta urinib koʻring", "No internet — please try again"))
                 "busy" -> toast(t("Этот Google уже привязан к другому аккаунту Neon Pulse", "Bu Google boshqa Neon Pulse akkauntiga ulangan", "This Google account is linked to another Neon Pulse account"))
                 else -> toast(t("Не удалось войти через Google", "Google orqali kirib boʻlmadi", "Google sign-in failed"))
@@ -201,20 +203,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Вход через Telegram (для тех, кто уже пользуется ботом): бот → «Старт» → назад */
-    private fun telegramSignIn() {
-        val n = HealthSync.newNonce(this)
-        openUrl("${HealthSync.BOT}?start=app_$n")
-    }
-
-    // ===== Аккаунт =====
+    // ===== Аккаунт и оплата =====
     private fun accountMenu() {
         val items = mutableListOf<Pair<String, () -> Unit>>()
-        items += t("🔗 Привязать Telegram (оплата, отчёт в боте)", "🔗 Telegramni ulash (toʻlov, botda hisobot)", "🔗 Link Telegram (payments, bot reports)") to { linkTelegram() }
-        if (!HealthSync.hasGoogle(this) && BuildConfig.GOOGLE_CLIENT_ID.isNotEmpty())
-            items += t("🔐 Привязать Google (вход без Telegram)", "🔐 Google ni ulash (Telegramsiz kirish)", "🔐 Link Google (sign in without Telegram)") to { googleSignIn() }
+        items += t("⭐ Оплатить подписку (через Telegram)", "⭐ Obunani toʻlash (Telegram orqali)", "⭐ Pay for a subscription (via Telegram)") to { payMenu() }
+        if (!HealthSync.hasGoogle(this) && googleOn)
+            items += t("🔐 Сохранить аккаунт через Google (для нового телефона)", "🔐 Akkauntni Google orqali saqlash (yangi telefon uchun)", "🔐 Save account with Google (for a new phone)") to { googleSignIn() }
         items += t("📄 Политика конфиденциальности", "📄 Maxfiylik siyosati", "📄 Privacy policy") to { openUrl(privacyUrl()) }
-        items += t("🚪 Выйти", "🚪 Chiqish", "🚪 Sign out") to { confirm(t("Выйти из аккаунта на этом телефоне?", "Bu telefonda akkauntdan chiqilsinmi?", "Sign out on this phone?")) { HealthSync.logout(this); lifecycleScope.launch { step() } } }
+        items += t("🚪 Выйти", "🚪 Chiqish", "🚪 Sign out") to { signOut() }
         items += t("🗑 Удалить аккаунт", "🗑 Akkauntni oʻchirish", "🗑 Delete account") to { deleteAccount() }
         AlertDialog.Builder(this)
             .setTitle(t("Аккаунт", "Akkaunt", "Account"))
@@ -222,17 +218,31 @@ class MainActivity : ComponentActivity() {
             .show()
     }
 
-    /** Привязка Telegram: код с сервера → бот /start link_КОД */
-    private fun linkTelegram() {
+    /** Оплата — единственный переход в Telegram: бот выставит счёт (Stars) на этот аккаунт, после оплаты — вернуться в приложение */
+    private fun payMenu() {
+        val opts = listOf(
+            "year" to t("📅 Neon Pulse на год", "📅 Neon Pulse bir yilga", "📅 Neon Pulse for a year"),
+            "coach_m" to t("🏋️ Тренер на месяц", "🏋️ Murabbiy bir oyga", "🏋️ Trainer for a month"),
+            "coach_y" to t("🏋️ Тренер на год", "🏋️ Murabbiy bir yilga", "🏋️ Trainer for a year"),
+        )
+        AlertDialog.Builder(this)
+            .setTitle(t("Оплата в Telegram (Stars)", "Telegramda toʻlov (Stars)", "Payment in Telegram (Stars)"))
+            .setItems(opts.map { it.second }.toTypedArray()) { _, i -> pay(opts[i].first) }
+            .show()
+    }
+
+    private fun pay(product: String) {
         lifecycleScope.launch {
-            val code = withContext(Dispatchers.IO) { HealthSync.linkCode(this@MainActivity) }
-            when {
-                code == null -> toast(t("Нет интернета — попробуйте ещё раз", "Internet yoʻq — qayta urinib koʻring", "No internet — please try again"))
-                code.isEmpty() -> openUrl(HealthSync.BOT) // уже привязан — просто открываем бота
-                else -> openUrl("${HealthSync.BOT}?start=link_$code")
-            }
+            val url = withContext(Dispatchers.IO) { HealthSync.payUrl(this@MainActivity, product) }
+            if (url == null) toast(t("Нет интернета — попробуйте ещё раз", "Internet yoʻq — qayta urinib koʻring", "No internet — please try again"))
+            else openUrl(url)
         }
     }
+
+    private fun signOut() = confirm(
+        if (HealthSync.hasGoogle(this)) t("Выйти из аккаунта на этом телефоне? Вернуться можно через Google.", "Bu telefonda akkauntdan chiqilsinmi? Google orqali qaytish mumkin.", "Sign out on this phone? You can come back with Google.")
+        else t("Выйти? Аккаунт не сохранён в Google — вернуться можно только на этом телефоне кнопкой «Начать».", "Chiqilsinmi? Akkaunt Google da saqlanmagan — faqat shu telefonda «Boshlash» orqali qaytish mumkin.", "Sign out? Your account isn’t saved to Google — you can only come back on this phone with “Get started”.")
+    ) { HealthSync.logout(this); lifecycleScope.launch { step() } }
 
     private fun deleteAccount() = confirm(t(
         "Удалить аккаунт и все данные (отчёты, тренер, питание, переписку)? Это нельзя отменить.",
@@ -284,9 +294,10 @@ class MainActivity : ComponentActivity() {
             layoutParams = LinearLayout.LayoutParams(-1, dp(56))
         }
         fun outline() = Button(this).apply {
-            isAllCaps = false; setTextColor(NEON); textSize = 17f; typeface = Typeface.DEFAULT_BOLD
+            isAllCaps = false; setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD
             background = GradientDrawable().apply { setColor(CARD); cornerRadius = dp(14).toFloat(); setStroke(dp(1), NEON) }
-            layoutParams = LinearLayout.LayoutParams(-1, dp(56)).apply { topMargin = dp(12) }; visibility = View.GONE
+            layoutParams = LinearLayout.LayoutParams(-1, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) }
+            minHeight = dp(56); visibility = View.GONE
         }
         btn2 = outline(); btn3 = outline()
         fun linkView(color: Int) = TextView(this).apply {
@@ -295,32 +306,6 @@ class MainActivity : ComponentActivity() {
         }
         link1 = linkView(NEON); link2 = linkView(DIM)
         for (v in listOf(title, info, mainBtn, btn2, btn3, link1, link2)) root.addView(v)
-
-        // Запасной вариант — ключ вручную (скрыт под ссылкой)
-        extra = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, dp(20), 0, 0) }
-        val manual = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; visibility = View.GONE
-            setPadding(dp(14), dp(12), dp(14), dp(12))
-            background = GradientDrawable().apply { setColor(CARD); cornerRadius = dp(14).toFloat() }
-        }
-        val input = EditText(this).apply {
-            hint = t("Ключ из бота", "Botdagi kalit", "Key from the bot"); setTextColor(Color.WHITE); setHintTextColor(DIM)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        }
-        manual.addView(input)
-        manual.addView(TextView(this).apply {
-            text = t("Сохранить", "Saqlash", "Save"); setTextColor(NEON); textSize = 16f; typeface = Typeface.DEFAULT_BOLD; setPadding(0, dp(10), 0, 0)
-            setOnClickListener {
-                if (HealthSync.validToken(input.text.toString())) { HealthSync.setToken(this@MainActivity, input.text.toString()); lifecycleScope.launch { step() } }
-                else toast(t("Ключ неверный", "Kalit notoʻgʻri", "Invalid key"))
-            }
-        })
-        extra.addView(TextView(this).apply {
-            text = t("Ввести ключ вручную", "Kalitni qoʻlda kiritish", "Enter key manually"); setTextColor(DIM); textSize = 14f; gravity = Gravity.CENTER
-            setOnClickListener { manual.visibility = View.VISIBLE; visibility = View.GONE }
-        })
-        extra.addView(manual)
-        root.addView(extra)
         val scroll = ScrollView(this).apply { setBackgroundColor(BG); isFillViewport = true; addView(root) }
         // Android 15+: отступ от строки состояния и навигации
         ViewCompat.setOnApplyWindowInsetsListener(scroll) { v, ins ->

@@ -28,16 +28,15 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.reflect.KClass
 
-/** Чтение данных из Health Connect и отправка в бот (формат совпадает с приёмом Android в n8n — WF13). */
+/** Чтение данных из Health Connect и отправка на сервер Neon Pulse (формат — приём Android в n8n, WF13). Telegram не нужен. */
 object HealthSync {
     const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
-    const val BOT = "https://t.me/WHOOP_Neon_bot"
     const val HOST = "akmalparpiev.app.n8n.cloud"
-    /** Мини-приложение Neon (то же, что «📱 Neon» в Telegram) на нужной вкладке; ключ страницы — md5 от ключа приложения */
+    /** Экраны Neon (Сегодня, Тренды, Тренер, Чат) на нужной вкладке; app=1 — режим приложения без Telegram. Ключ страницы — md5 от ключа приложения */
     fun appUrl(ctx: Context, tab: String): String? {
         val t = token(ctx) ?: return null
         val k = java.security.MessageDigest.getInstance("MD5").digest(t.toByteArray()).joinToString("") { "%02x".format(it) }
-        return "https://$HOST/webhook/health-app?k=$k&tab=$tab"
+        return "https://$HOST/webhook/health-app?k=$k&tab=$tab&app=1"
     }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
 
@@ -63,7 +62,7 @@ object HealthSync {
 
     fun available(ctx: Context) = HealthConnectClient.getSdkStatus(ctx) == HealthConnectClient.SDK_AVAILABLE
 
-    // ===== Настройки (ключ из бота и итог последней отправки) =====
+    // ===== Настройки (ключ аккаунта и итог последней отправки) =====
     private fun prefs(ctx: Context) = ctx.getSharedPreferences("neon", Context.MODE_PRIVATE)
     fun token(ctx: Context): String? = prefs(ctx).getString("token", null)
     fun setToken(ctx: Context, t: String) = prefs(ctx).edit().putString("token", t.trim().lowercase()).apply()
@@ -71,30 +70,7 @@ object HealthSync {
     private fun setStatus(ctx: Context, s: String) = prefs(ctx).edit().putString("last", s).apply()
     fun validToken(t: String) = Regex("^[a-z0-9]{32}$").matches(t.trim().lowercase())
 
-    // ===== Вход через Telegram: одноразовый код → бот → забираем ключ =====
-    const val PAIR = "https://akmalparpiev.app.n8n.cloud/webhook/app-pair"
-    fun newNonce(ctx: Context): String {
-        val abc = "abcdefghijklmnopqrstuvwxyz0123456789"
-        val rnd = java.security.SecureRandom()
-        val n = (1..24).map { abc[rnd.nextInt(abc.length)] }.joinToString("")
-        prefs(ctx).edit().putString("nonce", n).apply()
-        return n
-    }
-    fun nonce(ctx: Context): String? = prefs(ctx).getString("nonce", null)
-    /** Спрашиваем сервер: нажал ли человек START в боте. Да — сохраняем ключ. */
-    fun claim(ctx: Context): Boolean {
-        val n = nonce(ctx) ?: return false
-        return try {
-            val conn = URL("$PAIR?n=$n").openConnection() as HttpURLConnection
-            conn.connectTimeout = 10000; conn.readTimeout = 15000
-            val txt = conn.inputStream.bufferedReader().use { it.readText() }
-            conn.disconnect()
-            val t = JSONObject(txt).optString("token", "")
-            if (validToken(t)) { setToken(ctx, t); prefs(ctx).edit().remove("nonce").apply(); true } else false
-        } catch (e: Exception) { false }
-    }
-
-    // ===== Аккаунт без Telegram: вход через Google, привязка Telegram, удаление =====
+    // ===== Аккаунт без Telegram: «Начать», вход через Google, оплата, «входящие», удаление =====
     private const val API = "https://$HOST/webhook"
 
     /** Небольшой запрос к серверу; ответ — JSON или null при ошибке сети */
@@ -112,7 +88,31 @@ object HealthSync {
         JSONObject(txt)
     } catch (e: Exception) { null }
 
-    /** Вход через Google: id_token → ключ приложения. Есть ключ (вход через Telegram) — Google привязывается к тому же аккаунту. */
+    /** «Начать» без входа: аккаунт по устройству (ANDROID_ID). После переустановки — тот же аккаунт. null — успех, иначе код ошибки */
+    @android.annotation.SuppressLint("HardwareIds")
+    fun register(ctx: Context): String? {
+        val dev = android.provider.Settings.Secure.getString(ctx.contentResolver, android.provider.Settings.Secure.ANDROID_ID) ?: return "device"
+        val r = call("POST", "$API/app-register", JSONObject().put("device", dev).put("lang", serverLang(ctx))) ?: return "network"
+        val t = r.optString("token", "")
+        if (validToken(t)) { setToken(ctx, t); return null }
+        return r.optString("error", "error")
+    }
+
+    /** Оплата — единственный переход в Telegram: одноразовая ссылка на бота, счёт на этот аккаунт. product: year / coach_m / coach_y */
+    fun payUrl(ctx: Context, product: String): String? {
+        val t = token(ctx) ?: return null
+        val r = call("GET", "$API/app-pay?t=$t&p=$product") ?: return null
+        return r.optString("url", "").takeIf { it.startsWith("https://t.me/") }
+    }
+
+    /** «Входящие» без пометки прочитанным: сколько новых и какого вида последнее (week / bioage / subscription / paid) */
+    fun inboxPeek(ctx: Context): Pair<Int, String?>? {
+        val t = token(ctx) ?: return null
+        val r = call("GET", "$API/app-inbox?t=$t&peek=1") ?: return null
+        return r.optInt("unread", 0) to r.optString("last", "").ifEmpty { null }
+    }
+
+    /** Вход через Google: id_token → ключ приложения. Уже есть аккаунт («Начать») — Google привязывается к нему (перенос на другой телефон). */
     fun googleLogin(ctx: Context, idToken: String, name: String?): String? {
         val b = JSONObject().put("id_token", idToken).put("lang", serverLang(ctx)).put("name", name ?: "")
         token(ctx)?.let { b.put("t", it) }
@@ -122,14 +122,6 @@ object HealthSync {
         return r.optString("error", "error")
     }
     fun hasGoogle(ctx: Context) = prefs(ctx).getBoolean("google", false)
-
-    /** Код для привязки Telegram: null — ошибка сети, "" — Telegram уже привязан */
-    fun linkCode(ctx: Context): String? {
-        val t = token(ctx) ?: return null
-        val r = call("GET", "$API/app-link?t=$t") ?: return null
-        if (r.optBoolean("linked")) return ""
-        return r.optString("code", "").takeIf { Regex("^[a-z0-9]{20,40}$").matches(it) }
-    }
 
     /** Удаление аккаунта и всех данных на сервере; при успехе — выход */
     fun deleteAccount(ctx: Context): Boolean {

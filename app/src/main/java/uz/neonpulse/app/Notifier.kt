@@ -20,6 +20,7 @@ import java.time.LocalDate
 object Notifier {
     private const val CHANNEL = "morning"
     private const val ID_MORNING = 1
+    private const val ID_INBOX = 2
 
     /** Канал уведомлений (Android 8+); повторный вызов ничего не меняет */
     fun channel(ctx: Context) {
@@ -52,5 +53,38 @@ object Notifier {
             NotificationManagerCompat.from(ctx).notify(ID_MORNING, n)
             prefs.edit().putString("notified", today).apply()
         } catch (e: SecurityException) { /* разрешение отозвано — просто без уведомления */ }
+    }
+
+    /**
+     * «Входящие» приложения: итоги недели, биовозраст, оплата, напоминание о подписке.
+     * Уведомляем, когда непрочитанных стало больше; нажатие открывает чат, где сообщения и показываются.
+     */
+    fun inbox(ctx: Context) {
+        val (unread, last) = HealthSync.inboxPeek(ctx) ?: return
+        val prefs = ctx.getSharedPreferences("neon", Context.MODE_PRIVATE)
+        val shown = prefs.getInt("inbox_shown", 0)
+        if (unread <= shown) { if (unread == 0 && shown != 0) prefs.edit().putInt("inbox_shown", 0).apply(); return }
+        if (!allowed(ctx)) return
+        channel(ctx)
+        val title = when (last) {
+            "week" -> HealthSync.tr(ctx, "📅 Итоги недели готовы", "📅 Hafta yakunlari tayyor", "📅 Your week in review is ready")
+            "bioage" -> HealthSync.tr(ctx, "🧬 Биологический возраст готов", "🧬 Biologik yosh tayyor", "🧬 Your biological age is ready")
+            "paid" -> HealthSync.tr(ctx, "✅ Оплата получена", "✅ Toʻlov qabul qilindi", "✅ Payment received")
+            "subscription" -> HealthSync.tr(ctx, "⏳ Подписка", "⏳ Obuna", "⏳ Subscription")
+            else -> HealthSync.tr(ctx, "💬 Новое сообщение", "💬 Yangi xabar", "💬 New message")
+        }
+        val open = PendingIntent.getActivity(ctx, 1, CoachActivity.open(ctx, "chat"),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val n = NotificationCompat.Builder(ctx, CHANNEL)
+            .setSmallIcon(R.drawable.ic_fg)
+            .setContentTitle(title)
+            .setContentText(HealthSync.tr(ctx, "Нажмите, чтобы открыть в Neon", "Neon da ochish uchun bosing", "Tap to open in Neon"))
+            .setContentIntent(open)
+            .setAutoCancel(true)
+            .build()
+        try {
+            NotificationManagerCompat.from(ctx).notify(ID_INBOX, n)
+            prefs.edit().putInt("inbox_shown", unread).apply()
+        } catch (e: SecurityException) { }
     }
 }

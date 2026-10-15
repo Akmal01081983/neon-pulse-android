@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat
 /**
  * Тренер внутри приложения: мини-приложение Neon сразу на вкладке «Тренер»
  * (карта мышц, упражнения, видео, проверка техники по камере).
- * Чат (анкета, тренировка дня, ИИ) — на вкладке «Чат»; Telegram не нужен, ссылки на него открываются в Telegram.
+ * Чат (анкета, тренировка дня, ИИ) — на вкладке «Чат». Telegram не нужен; t.me открывается только для оплаты.
  */
 class CoachActivity : ComponentActivity() {
     private lateinit var web: WebView
