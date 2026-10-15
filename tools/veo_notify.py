@@ -21,8 +21,9 @@ except Exception:
 errs = [e for e in log if e['d'] == today and not e['ok']]
 if QUIET:
     # skip — сегодня лимит уже выбран без ошибок (запасной запуск), сообщать нечего
-    oks = sum(1 for e in log if e['d'] == today and e['ok'])
-    print('skip' if oks >= int(os.environ.get('DAILY') or 2) and not errs else 'send')
+    # лимит уже выбран более ранним запуском (он и отправил отчёт) — повторять нечего
+    used = sum(1 for e in log if e['d'] == today and (e['ok'] or e.get('rej')))
+    print('skip' if used >= int(os.environ.get('DAILY') or 2) else 'send')
     sys.exit(0)
 lines = []
 if made:
