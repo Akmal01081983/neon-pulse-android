@@ -1,4 +1,5 @@
 # Автозагрузка видео техники: каждый день по 2 ролика Veo по очереди из media/veo_prompts.json.
+# Перед публикацией ИИ проверяет технику (tools/veo_daily.py → check); брак не публикуется и снимается заново.
 # Ролики сразу попадают в бот и приложение (через media/index.json), APK не пересобирается.
 # Нужно: Secrets → GEMINI_API_KEY. Оповещение в бот: Secrets → NP_BOT_TOKEN, NP_OWNER_CHAT. По желанию: Variables → VEO_MODEL (модель), VEO_DAILY (лимит, по умолчанию 2).
 name: Видео Veo — ежедневно
@@ -80,3 +81,8 @@ jobs:
           TEXT=$(python3 tools/veo_notify.py "$MADE" "$JOB" "$RUN")
           curl -s -o /dev/null -w "Telegram: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendMessage" \
             --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT" -d disable_web_page_preview=true
+          # Сами ролики — чтобы владелец посмотрел технику на телефоне
+          for k in ${MADE//,/ }; do
+            curl -s -o /dev/null -w "Видео $k: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendVideo" \
+              -F "chat_id=$CHAT" -F "video=@media/$k.mp4" -F "caption=$k — если техника не та: Run workflow → redo: $k"
+          done

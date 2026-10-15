@@ -27,12 +27,16 @@ if QUIET:
 lines = []
 if made:
     lines.append('🎬 Видео техники загружены: ' + str(len(made)))
-    lines += ['✅ ' + names.get(k, k) for k in made]
+    sc = {e['k']: e.get('score') for e in log if e['d'] == today and e['ok']}
+    lines += ['✅ ' + names.get(k, k) + (f' — техника {sc[k]}/10' if sc.get(k) else '') for k in made]
 else:
     lines.append('🎬 Видео техники: сегодня новых нет')
-if errs:
-    e = errs[-1]
-    lines.append(f'⚠️ Ошибка ({names.get(e["k"], e["k"])}): {e.get("err", "")[:200]}')
+for e in errs[-3:]:
+    mark = '🚫 Отбракован' if e.get('rej') else '⚠️ Ошибка'
+    sc = f' {e["score"]}/10' if e.get('rej') else ''
+    lines.append(f'{mark}{sc} ({names.get(e["k"], e["k"])}): {e.get("err", "")[:200]}')
+if any(e.get('rej') for e in errs):
+    lines.append('Брак не публикуется, упражнение будет снято заново.')
 if job and job != 'success':
     lines.append(f'❌ Запуск завершился со статусом: {job}')
 lines.append(f'Готово {done} из {len(prompts)}, осталось {left} (~{(left + 1) // 2} дн.)')
