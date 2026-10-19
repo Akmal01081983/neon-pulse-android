@@ -3,7 +3,7 @@
 # Берёт следующие упражнения из media/veo_prompts.json, которых ещё нет в media/index.json,
 # делает не больше DAILY видео за сутки (UTC), кладёт в media/<ключ>.mp4.
 # Ссылки в index.json дописывает отдельный шаг процесса (нужен SHA коммита с роликом).
-import json, os, subprocess, sys, time, urllib.request, urllib.error, datetime
+import json, os, subprocess, sys, time, urllib.request, urllib.error, datetime, base64
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA = os.path.join(ROOT, 'media')
@@ -13,6 +13,10 @@ DAILY = int(os.environ.get('DAILY') or 2)          # лимит видео в с
 REDO = [k.strip() for k in (os.environ.get('REDO') or '').split(',') if k.strip()]  # переснять (плохие ролики)
 BASE = 'https://generativelanguage.googleapis.com/v1beta'
 STATE = os.path.join(MEDIA, 'veo_state.json')
+# Проверка техники: модель смотрит ролик до публикации. Первая доступная из списка.
+CHECK_MODELS = [m for m in [os.environ.get('VEO_CHECK_MODEL'), 'gemini-3.8-flash', 'gemini-2.5-flash'] if m]
+MIN_SCORE = int(os.environ.get('VEO_MIN_SCORE') or 8)   # проходной балл из 10
+MAX_REJECT = 3   # после стольких отказов упражнение уходит в конец очереди
 
 
 def load(p, d):
@@ -61,6 +65,47 @@ def generate(prompt, raw):
         f.write(r.read())
 
 
+CHECK_PROMPT = '''Ты строгий тренер по технике упражнений. Посмотри 8-секундное демо-видео для фитнес-приложения.
+Упражнение: {n}.
+Правильная техника: {tech}
+Типичные ошибки (их быть не должно): {errors}
+
+Проверь по пунктам:
+1. Это именно это упражнение и правильный снаряд/тренажёр (не похожий, не выдуманный).
+2. Движение реально выполняется с полной амплитудой из описания (не застывшая поза, не полдвижения).
+3. Нет ни одной типичной ошибки, техника безопасна.
+4. В кадре ровно одна фигура-манекен без лица, всё тело видно целиком (не обрезаны стопы/голова), нет текста и логотипов.
+5. Нет артефактов: лишние конечности, предметы сквозь тело, снаряд меняет форму.
+
+Ответь только JSON: {{"score": 0-10, "ok": true/false, "issues": ["кратко по-русски, что не так"]}}.
+ok=true только если все 5 пунктов выполнены. Сомневаешься — ok=false.'''
+
+
+def check(path, p):
+    # Возвращает (прошло, балл, замечания). Ошибка API — не прошло (лучше переснять, чем показать брак).
+    vid = base64.b64encode(open(path, 'rb').read()).decode()
+    text = CHECK_PROMPT.format(n=p['n'], tech=p.get('tech', ''), errors='; '.join(p.get('errors', [])) or '—')
+    last = ''
+    for model in CHECK_MODELS:
+        for meta in ({'videoMetadata': {'fps': 4}}, {}):
+            part = {'inline_data': {'mime_type': 'video/mp4', 'data': vid}, **meta}
+            try:
+                r = api(f'{BASE}/models/{model}:generateContent', {
+                    'contents': [{'parts': [part, {'text': text}]}],
+                    'generationConfig': {'responseMimeType': 'application/json', 'temperature': 0}})
+                out = ''.join(x.get('text', '') for x in r['candidates'][0]['content']['parts'])
+                j = json.loads(out[out.find('{'):out.rfind('}') + 1])
+                score = int(j.get('score', 0))
+                return bool(j.get('ok')) and score >= MIN_SCORE, score, [str(i) for i in j.get('issues', [])][:4]
+            except urllib.error.HTTPError as e:
+                last = f'{model}: HTTP {e.code}'
+                if e.code == 404:
+                    break          # модели нет — следующая
+            except Exception as e:
+                last = f'{model}: {str(e)[:100]}'
+    return False, 0, [f'проверка недоступна ({last})']
+
+
 def finish(raw, out):
     # Как у готовых роликов: 960×540, без звука, быстрый старт в браузере
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', raw, '-an', '-vf', 'scale=960:540', '-c:v', 'libx264',
@@ -72,9 +117,16 @@ def main():
     index = load(os.path.join(MEDIA, 'index.json'), {})
     state = load(STATE, {'log': []})
     today = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d')
-    used = sum(1 for e in state['log'] if e['d'] == today and e['ok'])  # неудачные попытки лимит не тратят
+    # Лимит тратят ролики, которые Veo сделал (опубликованные и отбракованные). Ошибки API лимит не тратят.
+    used = sum(1 for e in state['log'] if e['d'] == today and (e['ok'] or e.get('rej')))
     left = max(0, DAILY - used)
-    todo = [p for p in prompts if p['k'] in REDO] + [p for p in prompts if p['k'] not in index and p['k'] not in REDO]
+    rej = {}
+    for e in state['log']:
+        if e.get('rej'):
+            rej[e['k']] = rej.get(e['k'], 0) + 1
+    queue = [p for p in prompts if p['k'] not in index and p['k'] not in REDO]
+    queue.sort(key=lambda p: rej.get(p['k'], 0) >= MAX_REJECT)   # часто бракуемые — в конец
+    todo = [p for p in prompts if p['k'] in REDO] + queue
     print(f'Осталось снять: {sum(1 for p in prompts if p["k"] not in index)} · сегодня можно ещё: {left}')
     made = []
     for p in todo[:left]:
@@ -82,10 +134,18 @@ def main():
         print(f'▶ {p["k"]} — {p["n"]}')
         try:
             generate(p['p'], raw)
-            finish(raw, out)
-            made.append(p['k'])
-            state['log'].append({'d': today, 'k': p['k'], 'ok': True})
-            print('  ✓ готово')
+            tmp = f'/tmp/veo_{p["k"]}_fin.mp4'
+            finish(raw, tmp)
+            ok, score, issues = check(tmp, p)
+            if ok:
+                os.replace(tmp, out)
+                made.append(p['k'])
+                state['log'].append({'d': today, 'k': p['k'], 'ok': True, 'score': score})
+                print(f'  ✓ готово, техника {score}/10')
+            else:
+                state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'rej': True, 'score': score,
+                                     'err': 'Брак техники: ' + '; '.join(issues)[:250]})
+                print(f'  ✗ отбракован ({score}/10): {issues}')
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors='ignore')[:300]
             try:
@@ -94,7 +154,7 @@ def main():
                 pass
             state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': f'HTTP {e.code}: {msg}'})
             print(f'  ✗ HTTP {e.code}: {msg}')
-            if e.code in (429, 403, 400):   # лимит/ключ/модель — дальше пробовать бессмысленно
+            if e.code in (429, 403, 402, 400):   # лимит/баланс/ключ/модель — дальше пробовать бессмысленно
                 break
         except Exception as e:
             state['log'].append({'d': today, 'k': p['k'], 'ok': False, 'err': str(e)[:200]})

@@ -1,0 +1,41 @@
+# Оповещение владельцу в бот Neon Pulse, когда в media/index.json появились новые видео техники.
+# Видео публикует Claude после проверки техники (tools/media_add.py publish). Нужны Secrets NP_BOT_TOKEN, NP_OWNER_CHAT.
+name: Видео техники — оповещение
+on:
+  push:
+    branches: [main]
+    paths: ['media/index.json']
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - name: Сообщение в бот
+        env:
+          TOKEN: ${{ secrets.NP_BOT_TOKEN }}
+          CHAT: ${{ secrets.NP_OWNER_CHAT }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then echo "Оповещение выключено"; exit 0; fi
+          git show HEAD~1:media/index.json > /tmp/old.json 2>/dev/null || echo '{}' > /tmp/old.json
+          NEW=$(python3 -c "
+          import json
+          o=json.load(open('/tmp/old.json')); n=json.load(open('media/index.json'))
+          print(','.join(k for k in n if n[k]!=o.get(k)))")
+          if [ -z "$NEW" ]; then echo "Новых видео нет"; exit 0; fi
+          TEXT=$(python3 -c "
+          import json,sys
+          ps={p['k']:p['n'] for p in json.load(open('media/veo_prompts.json'))}
+          idx=json.load(open('media/index.json')); new='$NEW'.split(',')
+          left=sum(1 for k in ps if k not in idx)
+          print('🎬 Видео техники опубликованы: '+str(len(new)))
+          [print('✅ '+ps.get(k,k)) for k in new]
+          print(f'Готово {len(ps)-left} из {len(ps)}, осталось {left} (~{(left+1)//2} дн.)')")
+          curl -s -o /dev/null -w "Telegram: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$TEXT"
+          for k in ${NEW//,/ }; do
+            curl -s -o /dev/null -w "Видео $k: %{http_code}\n" "https://api.telegram.org/bot$TOKEN/sendVideo" \
+              -F "chat_id=$CHAT" -F "video=@media/$k.mp4" -F "caption=$k — уже в боте и приложении"
+          done
