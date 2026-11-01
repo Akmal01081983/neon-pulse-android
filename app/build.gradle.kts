@@ -21,6 +21,8 @@ android {
         manifestPlaceholders["appLabel"] = if (test) "Neon Pulse TEST" else "Neon Pulse"
         manifestPlaceholders["linkScheme"] = if (test) "neonpulsetest" else "neonpulse"
         // Вход через Google: ID клиента (тип Web) из Google Cloud. Пусто — кнопка Google скрыта, остаётся вход через Telegram
+        // Адрес сервера (свой сервер на Railway, без n8n): Variables → NP_SERVER_HOST, например neon-pulse.up.railway.app
+        buildConfigField("String", "SERVER_HOST", "\"" + (System.getenv("NP_SERVER_HOST")?.takeIf { it.isNotBlank() } ?: "akmalparpiev.app.n8n.cloud") + "\"")
         buildConfigField("String", "GOOGLE_CLIENT_ID", "\"" + (System.getenv("NP_GOOGLE_CLIENT_ID") ?: "") + "\"")
     }
 

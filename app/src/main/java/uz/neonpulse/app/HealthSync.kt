@@ -30,8 +30,9 @@ import kotlin.reflect.KClass
 
 /** Чтение данных из Health Connect и отправка на сервер Neon Pulse (формат — приём Android в n8n, WF13). Telegram не нужен. */
 object HealthSync {
-    const val SERVER = "https://akmalparpiev.app.n8n.cloud/webhook/health-android"
-    const val HOST = "akmalparpiev.app.n8n.cloud"
+    // Сервер берётся из сборки (переменная NP_SERVER_HOST в GitHub) — при переезде меняется без правки кода
+    val HOST: String = BuildConfig.SERVER_HOST
+    val SERVER = "https://$HOST/webhook/health-android"
     /** Экраны Neon (Сегодня, Тренды, Тренер, Чат) на нужной вкладке; app=1 — режим приложения без Telegram. Ключ страницы — md5 от ключа приложения */
     fun appUrl(ctx: Context, tab: String): String? {
         val t = token(ctx) ?: return null
@@ -71,7 +72,7 @@ object HealthSync {
     fun validToken(t: String) = Regex("^[a-z0-9]{32}$").matches(t.trim().lowercase())
 
     // ===== Аккаунт без Telegram: «Начать», вход через Google, оплата, «входящие», удаление =====
-    private const val API = "https://$HOST/webhook"
+    private val API = "https://$HOST/webhook"
 
     /** Небольшой запрос к серверу; ответ — JSON или null при ошибке сети */
     private fun call(method: String, url: String, body: JSONObject? = null): JSONObject? = try {
@@ -134,7 +135,7 @@ object HealthSync {
     /** Выход: ключ и настройки стираются с телефона (данные на сервере остаются) */
     fun logout(ctx: Context) { prefs(ctx).edit().clear().apply() }
 
-    const val PRIVACY = "https://$HOST/webhook/privacy"
+    val PRIVACY = "https://$HOST/webhook/privacy"
 
     private suspend fun <T : Record> readAll(c: HealthConnectClient, type: KClass<T>, from: Instant, to: Instant): List<T> {
         val out = mutableListOf<T>()

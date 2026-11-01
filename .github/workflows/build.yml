@@ -41,6 +41,8 @@ jobs:
           NP_TEST: ${{ github.event_name == 'pull_request' && '1' || '0' }}
           # ID клиента Google (не секрет) — в настройках репозитория: Variables → NP_GOOGLE_CLIENT_ID
           NP_GOOGLE_CLIENT_ID: ${{ vars.NP_GOOGLE_CLIENT_ID }}
+          # Адрес своего сервера (Railway) — Variables → NP_SERVER_HOST
+          NP_SERVER_HOST: ${{ vars.NP_SERVER_HOST }}
         run: |
           set -o pipefail
           gradle assembleRelease bundleRelease --no-daemon 2>&1 | tee build.log || { M=$( { grep -E "^e: " build.log; grep -A30 "What went wrong" build.log; } | head -60 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}'); echo "::error title=build::$M"; exit 1; }
