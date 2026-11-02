@@ -10,10 +10,14 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import java.util.concurrent.TimeUnit
 
-/** Фоновая отправка раз в час: утром — отчёт после сна, днём — нагрузка и стресс «вживую». */
+/**
+ * Фоновая работа раз в час (без Telegram): данные часов — утром отчёт после сна, днём нагрузка и стресс «вживую»;
+ * затем «входящие» — итоги недели, биовозраст, оплата → уведомление на телефон.
+ */
 class SyncWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
     override suspend fun doWork(): Result {
-        HealthSync.run(applicationContext, manual = false)
+        runCatching { HealthSync.run(applicationContext, manual = false) } // без доступа к часам — просто пропуск
+        runCatching { Notifier.inbox(applicationContext) }
         return Result.success() // ошибки не повторяем — через час будет следующая попытка
     }
 

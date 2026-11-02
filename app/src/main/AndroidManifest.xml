@@ -3,6 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Уведомление «Отчёт готов» утром (Android 13+ спрашивает разрешение) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Камера — только для проверки техники в тренере (спрашиваем, когда человек её включает) -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -29,7 +31,7 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Neon Pulse"
+        android:label="${appLabel}"
         android:supportsRtl="true"
         android:theme="@style/Theme.NeonPulse">
 
@@ -46,7 +48,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="neonpulse" android:host="connect" />
+                <data android:scheme="${linkScheme}" android:host="connect" />
             </intent-filter>
             <!-- Health Connect показывает отсюда, зачем приложению доступ -->
             <intent-filter>
@@ -59,7 +61,16 @@
             android:name=".CoachActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="Neon Pulse" />
+            android:label="${appLabel}" />
+
+        <!-- Снимок еды с камеры: камера пишет фото во временный файл приложения -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- Android 14+: экран «как приложение использует данные» -->
         <activity-alias
