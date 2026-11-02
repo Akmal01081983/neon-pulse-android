@@ -17,14 +17,15 @@ import uz.neonpulse.app.R
  * чтобы переход со входа на основные экраны был незаметным.
  */
 object Neon {
-    val Bg = Color(0xFF07070F)        // фон
-    val Surface = Color(0xFF10101C)   // карточки
-    val Surface2 = Color(0xFF0B0B18)  // вложенные поля
-    val Line = Color(0xFF22243A)      // рамки и разделители
+    val Bg = Color(0xFF0E0F12)        // фон — глубокий угольный
+    val Surface = Color(0xFF17191E)   // карточки
+    val Surface2 = Color(0xFF121418)  // вложенные поля
+    val Line = Color(0xFF272B33)      // рамки и разделители
     val Text = Color(0xFFEDEBFF)      // основной текст
     val Muted = Color(0xFF8A87A8)     // подписи
     val Soft = Color(0xFFC9C6E6)      // второстепенный текст
-    val Cyan = Color(0xFF19E3FF)      // главный акцент, кнопки
+    val Cyan = Color(0xFF19E3FF)      // главный акцент, кнопки (Electric Cyan)
+    val Lime = Color(0xFFC6FF3D)      // второй акцент: волна, прогресс (Neon Lime)
     val Green = Color(0xFF2BFF88)     // готово / успех
     val Pink = Color(0xFFFF2FD1)      // логотип
     val Amber = Color(0xFFFFB020)     // предупреждение

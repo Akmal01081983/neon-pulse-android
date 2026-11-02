@@ -81,6 +81,7 @@ import uz.neonpulse.app.ui.LinkButton
 import uz.neonpulse.app.ui.Logo
 import uz.neonpulse.app.ui.Neon
 import uz.neonpulse.app.ui.NeonTheme
+import uz.neonpulse.app.ui.NeonWater
 import uz.neonpulse.app.ui.NoticeCard
 import uz.neonpulse.app.ui.PrimaryButton
 import uz.neonpulse.app.ui.SecondaryButton
@@ -309,7 +310,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun Screen() {
-        Box(Modifier.fillMaxSize().background(Neon.Bg)) {
+        NeonWater(Modifier.fillMaxSize()) {
             AnimatedContent(targetState = stage, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "stage") { s ->
                 Column(
                     Modifier.fillMaxSize().safeDrawingPadding().verticalScroll(rememberScrollState())
