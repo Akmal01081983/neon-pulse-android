@@ -95,6 +95,11 @@ class CoachActivity : ComponentActivity() {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
+            // Страница Neon сообщает приложению выбранный язык (кнопка RU/UZ/EN) — первые экраны переключаются так же
+            addJavascriptInterface(object {
+                @android.webkit.JavascriptInterface
+                fun setLang(l: String) { HealthSync.setLang(this@CoachActivity, l, toServer = false) }
+            }, "NeonApp")
             webViewClient = object : WebViewClient() {
                 // Страницы Neon — внутри приложения, остальное (Telegram, YouTube…) — в своих приложениях
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {

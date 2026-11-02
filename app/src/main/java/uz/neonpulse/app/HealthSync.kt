@@ -36,7 +36,7 @@ object HealthSync {
     /** Экраны Neon (Сегодня, Тренды, Тренер, Чат) на нужной вкладке; app=1 — режим приложения без Telegram. Ключ страницы — md5 от ключа приложения */
     fun appUrl(ctx: Context, tab: String): String? {
         val t = token(ctx) ?: return null
-        val k = java.security.MessageDigest.getInstance("MD5").digest(t.toByteArray()).joinToString("") { "%02x".format(it) }
+        val k = md5(t)
         return "https://$HOST/webhook/health-app?k=$k&tab=$tab&app=1"
     }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
@@ -49,13 +49,37 @@ object HealthSync {
         WeightRecord::class, ExerciseSessionRecord::class, BloodPressureRecord::class,
     )
     val PERMISSIONS: Set<String> = TYPES.map { HealthPermission.getReadPermission(it) }.toSet() + BACKGROUND
+    /** Без этих данных отчёт не посчитать: сон, пульс, пульс покоя, HRV, шаги. Остальное — по желанию */
+    val CORE: Set<String> = listOf(SleepSessionRecord::class, HeartRateRecord::class, RestingHeartRateRecord::class,
+        HeartRateVariabilityRmssdRecord::class, StepsRecord::class).map { HealthPermission.getReadPermission(it) }.toSet()
+    const val BACKGROUND_PERMISSION = BACKGROUND
 
-    /** Язык интерфейса по языку телефона: узбекский → uz, русский и языки СНГ → ru, остальные → en (Google Play по всему миру) */
+    /** Состояние Health Connect: есть / нужно обновить / нет на телефоне */
+    enum class Hc { OK, UPDATE, MISSING }
+    fun hcStatus(ctx: Context): Hc = when (HealthConnectClient.getSdkStatus(ctx)) {
+        HealthConnectClient.SDK_AVAILABLE -> Hc.OK
+        HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> Hc.UPDATE
+        else -> Hc.MISSING
+    }
+
+    /**
+     * Язык интерфейса: выбранный в приложении (кнопка RU/UZ/EN), иначе — по языку телефона:
+     * узбекский → uz, русский и языки СНГ → ru, остальные → en (Google Play по всему миру)
+     */
     private val RU_FAMILY = setOf("ru", "be", "kk", "ky", "tg", "tk", "hy", "az", "ka", "uk")
+    val LANGS = listOf("ru", "uz", "en")
     fun lang(ctx: Context): String {
+        prefs(ctx).getString("lang", null)?.takeIf { it in LANGS }?.let { return it }
         val l = ctx.resources.configuration.locales[0].language
         return when { l == "uz" -> "uz"; l in RU_FAMILY -> "ru"; else -> "en" }
     }
+    /** Выбор языка: на телефоне сразу, на сервере (отчёты, тренер, чат) — если аккаунт уже есть */
+    fun setLang(ctx: Context, l: String, toServer: Boolean = true) {
+        if (l !in LANGS) return
+        prefs(ctx).edit().putString("lang", l).apply()
+        if (toServer) token(ctx)?.let { t -> call("POST", "$API/health-chat", JSONObject().put("k", md5(t)).put("data", "l|$l").put("msg_id", 1)) }
+    }
+    fun md5(s: String) = java.security.MessageDigest.getInstance("MD5").digest(s.toByteArray()).joinToString("") { "%02x".format(it) }
     fun uz(ctx: Context) = lang(ctx) == "uz"
     /** Язык для сервера: отчёты, тренер и чат — на том же языке, что и приложение */
     fun serverLang(ctx: Context) = lang(ctx)
@@ -137,7 +161,11 @@ object HealthSync {
 
     val PRIVACY = "https://$HOST/webhook/privacy"
 
+    /** Разрешения, выданные человеком (для частичного доступа: закрытые виды данных просто пропускаем) */
+    private var granted: Set<String> = emptySet()
+
     private suspend fun <T : Record> readAll(c: HealthConnectClient, type: KClass<T>, from: Instant, to: Instant): List<T> {
+        if (granted.isNotEmpty() && HealthPermission.getReadPermission(type) !in granted) return emptyList()
         val out = mutableListOf<T>()
         var page: String? = null
         do {
@@ -156,8 +184,8 @@ object HealthSync {
         val token = token(ctx) ?: run { setStatus(ctx, tr(ctx, "Нет ключа — войдите в аккаунт", "Kalit yoʻq — akkauntga kiring", "No key — please sign in")); return false }
         if (!available(ctx)) { setStatus(ctx, tr(ctx, "Health Connect не установлен", "Health Connect oʻrnatilmagan", "Health Connect is not installed")); return false }
         val c = HealthConnectClient.getOrCreate(ctx)
-        val granted = c.permissionController.getGrantedPermissions()
-        if (!granted.containsAll(PERMISSIONS - BACKGROUND)) { setStatus(ctx, tr(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»", "Maʼlumotlarga ruxsat yoʻq — «Ruxsat berish» ni bosing", "No data access — tap “Allow access”")); return false }
+        granted = c.permissionController.getGrantedPermissions()
+        if (!granted.containsAll(CORE)) { setStatus(ctx, tr(ctx, "Нет доступа к данным — нажмите «Разрешить доступ»", "Maʼlumotlarga ruxsat yoʻq — «Ruxsat berish» ni bosing", "No data access — tap “Allow access”")); return false }
 
         val now = Instant.now()
         val from = now.minus(Duration.ofHours(26))
