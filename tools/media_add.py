@@ -3,7 +3,7 @@
 #   media_add.py next [N]                   — следующие N упражнений без видео (по умолчанию 2) с промптами
 #   media_add.py prep <ключ> <файл.mp4>     — обработать: без звука, значок Veo закрыт, 960×540 → media/<ключ>.mp4;
 #                                             лист кадров для проверки техники → /tmp/<ключ>_sheet.jpg
-#   media_add.py publish <ключ1,ключ2>      — коммит роликов в main, затем ссылки jsDelivr в index.json
+#   media_add.py publish <ключ1,ключ2>      — коммит роликов (и петель) в main, затем ссылки jsDelivr в index.json и loops.json
 # Проверку техники делает Claude по листу кадров (описание техники и ошибки — в media/veo_prompts.json).
 import json, os, subprocess, sys
 
@@ -72,12 +72,14 @@ def cmd_publish(keys):
             sys.exit(f'Нет media/{k}.mp4 — сначала prep')
     git('checkout', '-q', 'main')
     git('pull', '-q', '--ff-only', 'origin', 'main')
-    git('add', *[f'media/{k}.mp4' for k in keys])
+    # Короткие петли для карточек приложения (media/loop/<ключ>.mp4); не получилась — приложение покажет полный ролик
+    subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'veo_loops.py'), ','.join(keys)])
+    git('add', *[f'media/{k}.mp4' for k in keys], *[f'media/loop/{k}.mp4' for k in keys if os.path.exists(os.path.join(MEDIA, 'loop', k + '.mp4'))])
     git('commit', '-q', '-m', f'media: {",".join(keys)} (Gemini, проверено)')
     git('push', '-q', 'origin', 'main')
     sha = git('rev-parse', 'HEAD')
     subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'veo_index.py'), sha, ','.join(keys)], check=True)
-    git('add', 'media/index.json')
+    git('add', 'media/index.json', 'media/loops.json')
     git('commit', '-q', '-m', f'media: ссылки {",".join(keys)}')
     git('push', '-q', 'origin', 'main')
     print('Опубликовано:', ', '.join(keys))
