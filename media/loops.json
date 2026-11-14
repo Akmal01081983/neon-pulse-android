@@ -10,5 +10,6 @@
  "bridge_single": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@d9fdf5e6966b86991a1bfdc8fa68da230026f06a/media/loop/bridge_single.mp4",
  "latpull": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@bb51cd5be644c061f9d00c4b215fe7fe0aaa717b/media/loop/latpull.mp4",
  "deadbug": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@a549004595ce40caf43613c6213b5bd5d9d90d97/media/loop/deadbug.mp4",
- "pushdown": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@faef9bdde088b587febe403ff1884a0abeb7ecb8/media/loop/pushdown.mp4"
+ "pushdown": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@faef9bdde088b587febe403ff1884a0abeb7ecb8/media/loop/pushdown.mp4",
+ "bench": "https://cdn.jsdelivr.net/gh/Akmal01081983/neon-pulse-android@039484e1f1c49c3b95517c885ee586e7393d6be8/media/loop/bench.mp4"
 }
