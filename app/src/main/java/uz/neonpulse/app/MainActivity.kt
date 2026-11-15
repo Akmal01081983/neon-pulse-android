@@ -98,7 +98,7 @@ import uz.neonpulse.app.ui.Tile
 class MainActivity : ComponentActivity() {
 
     /** На каком шаге человек */
-    private enum class Stage { LOADING, WELCOME, HEALTH_CONNECT, ACCESS, READY }
+    private enum class Stage { LOADING, UPDATE, WELCOME, HEALTH_CONNECT, ACCESS, READY }
 
     /** Что показывать на экране «Всё готово» */
     private data class Ready(
@@ -149,7 +149,14 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) { super.onNewIntent(intent); handleLink(intent) }
 
     // Вернулись из настроек Health Connect или из Telegram — пересчитываем шаг
-    override fun onResume() { super.onResume(); lifecycleScope.launch { step() } }
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            // Сначала версия: устарела — дальше не пускаем, только «Обновить»
+            withContext(Dispatchers.IO) { runCatching { HealthSync.checkMinVersion(this@MainActivity) } }
+            step()
+        }
+    }
 
     /** Ссылка neonpulse://connect?t=КЛЮЧ — подключить телефон к уже существующему аккаунту */
     private fun handleLink(i: Intent?) {
@@ -166,6 +173,7 @@ class MainActivity : ComponentActivity() {
     /** Определяем шаг заново (после входа, разрешений, возврата из настроек) */
     private suspend fun step() {
         if (busy) return
+        if (HealthSync.outdated(this)) { stage = Stage.UPDATE; return }
         if (HealthSync.token(this) == null) { stage = Stage.WELCOME; return }
         val skip = prefs.getBoolean("skip_watch", false)
         hc = HealthSync.hcStatus(this)
@@ -315,6 +323,7 @@ class MainActivity : ComponentActivity() {
                     Column(Modifier.widthIn(max = 520.dp).fillMaxWidth()) {
                         when (s) {
                             Stage.LOADING -> Spacer(Modifier.height(1.dp))
+                            Stage.UPDATE -> UpdateStep()
                             Stage.WELCOME -> Welcome()
                             Stage.HEALTH_CONNECT -> HealthConnectStep()
                             Stage.ACCESS -> AccessStep()
@@ -346,6 +355,21 @@ class MainActivity : ComponentActivity() {
             Spacer(Modifier.weight(1f))
             LangChip(lang, { sheet = Sheet.LANG }, t("Язык", "Til", "Language"))
         }
+    }
+
+    private fun onOff(on: Boolean) = if (on) t("вкл", "yoqilgan", "on") else t("выкл", "oʻchiq", "off")
+
+    /** Вышла новая версия: старая больше не работает — одна большая кнопка «Обновить» */
+    @Composable
+    private fun UpdateStep() {
+        Spacer(Modifier.height(18.dp))
+        Box(Modifier.fillMaxWidth().padding(vertical = 22.dp), contentAlignment = Alignment.Center) { HeroRing(fill = 1f) }
+        Title(t("Вышла новая версия", "Yangi versiya chiqdi", "A new version is out"),
+            t("Эта версия устарела и больше не работает. Обновите приложение — все ваши данные сохранятся.",
+                "Bu versiya eskirgan va endi ishlamaydi. Ilovani yangilang — barcha maʼlumotlaringiz saqlanadi.",
+                "This version is out of date and no longer works. Update the app — all your data is kept."))
+        Spacer(Modifier.height(22.dp))
+        PrimaryButton(t("Обновить", "Yangilash", "Update"), { openUrl(HealthSync.updateUrl(this@MainActivity)) })
     }
 
     /** Пометка «Бета» в шапке: приложение в тестировании, оплаты нет */
@@ -576,6 +600,15 @@ class MainActivity : ComponentActivity() {
                         if (googleOn && !HealthSync.hasGoogle(this@MainActivity))
                             SheetItem(t("Сохранить аккаунт через Google", "Akkauntni Google orqali saqlash", "Save account with Google"), { sheet = Sheet.NONE; googleSignIn() })
                         SheetItem(t("Язык", "Til", "Language"), { sheet = Sheet.LANG })
+                        // Для простых телефонов: лёгкий режим и экономное фото
+                        SheetItem(t("Лёгкий режим", "Yengil rejim", "Lite mode") + ": " + onOff(HealthSync.lite(this@MainActivity)), {
+                            val on = !HealthSync.lite(this@MainActivity); HealthSync.setPref(this@MainActivity, "lite", if (on) "1" else "0"); sheet = Sheet.NONE
+                            toast(t("Лёгкий режим", "Yengil rejim", "Lite mode") + ": " + onOff(on))
+                        })
+                        SheetItem(t("Экономное фото", "Tejamkor surat", "Data-saver photos") + ": " + onOff(HealthSync.photoEco(this@MainActivity)), {
+                            val on = !HealthSync.photoEco(this@MainActivity); HealthSync.setPref(this@MainActivity, "photo", if (on) "1" else "0"); sheet = Sheet.NONE
+                            toast(t("Экономное фото", "Tejamkor surat", "Data-saver photos") + ": " + onOff(on))
+                        })
                         SheetItem(t("Политика конфиденциальности", "Maxfiylik siyosati", "Privacy policy"), { sheet = Sheet.NONE; openUrl(privacyUrl()) })
                         SheetItem(t("Выйти", "Chiqish", "Sign out"), {
                             sheet = Sheet.NONE

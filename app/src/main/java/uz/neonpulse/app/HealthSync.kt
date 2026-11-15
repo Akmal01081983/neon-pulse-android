@@ -37,7 +37,41 @@ object HealthSync {
     fun appUrl(ctx: Context, tab: String): String? {
         val t = token(ctx) ?: return null
         val k = md5(t)
-        return "https://$HOST/webhook/health-app?k=$k&tab=$tab&app=1"
+        return "https://$HOST/webhook/health-app?k=$k&tab=$tab&app=1&lite=${if (lite(ctx)) 1 else 0}&photo=${if (photoEco(ctx)) "eco" else "high"}"
+    }
+
+    // ===== Лёгкий режим и качество фото (для простых телефонов) =====
+    /** Слабый телефон: Android сам считает его «малопамятным» или памяти меньше 3 ГБ */
+    fun weakPhone(ctx: Context): Boolean {
+        val am = ctx.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        val mi = android.app.ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
+        return am.isLowRamDevice || mi.totalMem < 3L * 1024 * 1024 * 1024
+    }
+    /** Лёгкий режим: выбор человека, иначе — сам на слабом телефоне */
+    fun lite(ctx: Context): Boolean = when (prefs(ctx).getString("lite", null)) { "1" -> true; "0" -> false; else -> weakPhone(ctx) }
+    /** Экономное фото еды: выбор человека, иначе — на слабом телефоне */
+    fun photoEco(ctx: Context): Boolean = when (prefs(ctx).getString("photo", null)) { "1" -> true; "0" -> false; else -> weakPhone(ctx) }
+    /** Сохранить выбор: key = lite / photo, v = "1" / "0" */
+    fun setPref(ctx: Context, key: String, v: String) { if (key in setOf("lite", "photo") && v in setOf("1", "0")) prefs(ctx).edit().putString(key, v).apply() }
+
+    // ===== Обязательное обновление: сервер сообщает минимальную версию =====
+    /** Минимальная версия с сервера (кэш — на случай, если интернета нет) */
+    fun checkMinVersion(ctx: Context): Int {
+        val r = call("GET", "$API/app-version")
+        val min = r?.optInt("min", -1) ?: -1
+        if (min >= 0) prefs(ctx).edit().putInt("min_version", min).putString("apk_url", r?.optString("apk", "") ?: "").apply()
+        return prefs(ctx).getInt("min_version", 0)
+    }
+    fun outdated(ctx: Context) = BuildConfig.VERSION_CODE < prefs(ctx).getInt("min_version", 0)
+    /** Куда вести за обновлением: установлено из Google Play — в Play, иначе — новый APK */
+    fun updateUrl(ctx: Context): String {
+        val installer = try {
+            if (android.os.Build.VERSION.SDK_INT >= 30) ctx.packageManager.getInstallSourceInfo(ctx.packageName).installingPackageName
+            else @Suppress("DEPRECATION") ctx.packageManager.getInstallerPackageName(ctx.packageName)
+        } catch (e: Exception) { null }
+        return if (installer == "com.android.vending") "market://details?id=${ctx.packageName}"
+        else prefs(ctx).getString("apk_url", null)?.takeIf { it.startsWith("https://") }
+            ?: "https://github.com/Akmal01081983/neon-pulse-android/releases/latest/download/NeonPulse.apk"
     }
     private const val BACKGROUND = "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
 
