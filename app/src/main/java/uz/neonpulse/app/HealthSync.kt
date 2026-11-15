@@ -123,13 +123,6 @@ object HealthSync {
         return r.optString("error", "error")
     }
 
-    /** Оплата — единственный переход в Telegram: одноразовая ссылка на бота, счёт на этот аккаунт. product: year / coach_m / coach_y */
-    fun payUrl(ctx: Context, product: String): String? {
-        val t = token(ctx) ?: return null
-        val r = call("GET", "$API/app-pay?t=$t&p=$product") ?: return null
-        return r.optString("url", "").takeIf { it.startsWith("https://t.me/") }
-    }
-
     /** «Входящие» без пометки прочитанным: сколько новых и какого вида последнее (week / bioage / subscription / paid) */
     fun inboxPeek(ctx: Context): Pair<Int, String?>? {
         val t = token(ctx) ?: return null

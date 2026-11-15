@@ -93,7 +93,7 @@ import uz.neonpulse.app.ui.Tile
  * Первые экраны приложения (свои, не с сервера), в стиле экранов Neon:
  * 1) вход — Google или «Начать без входа»; 2) Health Connect; 3) доступ к данным часов; 4) «Всё готово».
  * Всё остальное (Сегодня, Тренды, Тренер, Чат) — страница Neon в CoachActivity.
- * Telegram открывается только для оплаты (Stars).
+ * Бета-версия: оплаты нет, всё бесплатно до 01.03.2027.
  */
 class MainActivity : ComponentActivity() {
 
@@ -110,7 +110,7 @@ class MainActivity : ComponentActivity() {
         val status: String,          // итог последней отправки
     )
 
-    private enum class Sheet { NONE, LANG, ACCOUNT, PAY }
+    private enum class Sheet { NONE, LANG, ACCOUNT }
 
     private val prefs by lazy { getSharedPreferences("neon", MODE_PRIVATE) }
     private val googleOn get() = BuildConfig.GOOGLE_CLIENT_ID.isNotEmpty()
@@ -257,12 +257,6 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch(Dispatchers.IO) { runCatching { HealthSync.setLang(this@MainActivity, l) } }
     }
 
-    private fun pay(product: String) = lifecycleScope.launch {
-        sheet = Sheet.NONE
-        val url = withContext(Dispatchers.IO) { HealthSync.payUrl(this@MainActivity, product) }
-        if (url == null) toast(t("Нет интернета — попробуйте ещё раз", "Internet yoʻq — qayta urinib koʻring", "No internet — please try again")) else openUrl(url)
-    }
-
     private fun signOut() {
         HealthSync.logout(this)
         prefs.edit().putString("lang", lang).apply() // язык оставляем
@@ -347,10 +341,24 @@ class MainActivity : ComponentActivity() {
     private fun TopBar() {
         Row(Modifier.widthIn(max = 520.dp).fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Logo()
+            Spacer(Modifier.size(8.dp))
+            BetaChip()
             Spacer(Modifier.weight(1f))
             LangChip(lang, { sheet = Sheet.LANG }, t("Язык", "Til", "Language"))
         }
     }
+
+    /** Пометка «Бета» в шапке: приложение в тестировании, оплаты нет */
+    @Composable
+    private fun BetaChip() {
+        Text("BETA", color = Neon.Cyan, style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Neon.Cyan.copy(alpha = 0.12f)).padding(horizontal = 8.dp, vertical = 3.dp))
+    }
+
+    /** Строка о бете: всё бесплатно до 1 марта 2027 */
+    private fun betaText() = t("Бета-версия: всё бесплатно до 1 марта 2027, включая тренера.",
+        "Beta-versiya: hammasi 2027-yil 1-martgacha bepul, murabbiy ham.",
+        "Beta version: everything is free until 1 March 2027, including the trainer.")
 
     @Composable
     private fun Title(text: String, sub: String) {
@@ -479,6 +487,8 @@ class MainActivity : ComponentActivity() {
         Text(if (r.watch) t("Данные с часов приходят сами. Каждое утро — уведомление с отчётом.", "Soat maʼlumotlari oʻzi keladi. Har tong — hisobot bilan bildirishnoma.", "Watch data syncs on its own. Every morning you get a report.")
             else t("Тренер, питание и чат работают и без часов.", "Murabbiy, ovqatlanish va chat soatsiz ham ishlaydi.", "Trainer, nutrition and chat work without a watch too."),
             style = MaterialTheme.typography.bodyLarge, color = Neon.Soft)
+        Spacer(Modifier.height(6.dp))
+        Text(betaText(), style = MaterialTheme.typography.bodyMedium, color = Neon.Muted)
         if (r.watch) {
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Neon.Surface).padding(horizontal = 14.dp, vertical = 10.dp),
@@ -533,7 +543,7 @@ class MainActivity : ComponentActivity() {
                 }, tone = Neon.Cyan)
         }
         Spacer(Modifier.height(10.dp))
-        LinkButton(t("Аккаунт и оплата", "Akkaunt va toʻlov", "Account & payment"), { sheet = Sheet.ACCOUNT }, color = Neon.Soft)
+        LinkButton(t("Аккаунт", "Akkaunt", "Account"), { sheet = Sheet.ACCOUNT }, color = Neon.Soft)
     }
 
     /** Значок в центре кольца */
@@ -562,7 +572,7 @@ class MainActivity : ComponentActivity() {
                     }
                     Sheet.ACCOUNT -> {
                         SheetTitle(t("Аккаунт", "Akkaunt", "Account"))
-                        SheetItem(t("Оплатить подписку (Telegram)", "Obunani toʻlash (Telegram)", "Pay for a subscription (Telegram)"), { sheet = Sheet.PAY })
+                        Text(betaText(), color = Neon.Muted, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
                         if (googleOn && !HealthSync.hasGoogle(this@MainActivity))
                             SheetItem(t("Сохранить аккаунт через Google", "Akkauntni Google orqali saqlash", "Save account with Google"), { sheet = Sheet.NONE; googleSignIn() })
                         SheetItem(t("Язык", "Til", "Language"), { sheet = Sheet.LANG })
@@ -578,14 +588,6 @@ class MainActivity : ComponentActivity() {
                                 "Akkaunt va barcha maʼlumotlar — hisobotlar, murabbiy, ovqatlanish, yozishmalar oʻchirilsinmi? Buni qaytarib boʻlmaydi.",
                                 "Delete your account and all data — reports, trainer, nutrition, chats? This can’t be undone.") to { deleteAccount(); Unit }
                         }, color = Neon.Red)
-                    }
-                    Sheet.PAY -> {
-                        SheetTitle(t("Оплата в Telegram (Stars)", "Telegramda toʻlov (Stars)", "Payment in Telegram (Stars)"))
-                        SheetItem(t("Neon Pulse на год", "Neon Pulse bir yilga", "Neon Pulse for a year"), { pay("year") })
-                        SheetItem(t("Тренер на месяц", "Murabbiy bir oyga", "Trainer for a month"), { pay("coach_m") })
-                        SheetItem(t("Тренер на год", "Murabbiy bir yilga", "Trainer for a year"), { pay("coach_y") })
-                        Text(t("Откроется бот — после оплаты вернитесь в приложение.", "Bot ochiladi — toʻlovdan soʻng ilovaga qayting.", "The bot will open — come back to the app after paying."),
-                            color = Neon.Muted, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(16.dp))
                     }
                     Sheet.NONE -> {}
                 }
