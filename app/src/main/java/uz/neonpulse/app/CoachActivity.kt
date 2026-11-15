@@ -85,6 +85,8 @@ class CoachActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Вкладка: «today» — отчёт (из уведомления и кнопки «Открыть Neon»), по умолчанию — «Тренер»
         val tab = intent.getStringExtra(EXTRA_TAB)?.takeIf { it in setOf("today", "trends", "tech", "chat", "help") } ?: "tech"
+        // Устаревшая версия (например, открыли из уведомления) — на главный экран с кнопкой «Обновить»
+        if (HealthSync.outdated(this)) { startActivity(Intent(this, MainActivity::class.java)); finish(); return }
         val url = HealthSync.appUrl(this, tab)
         if (url == null) {
             Toast.makeText(this, HealthSync.tr(this, "Сначала войдите в аккаунт", "Avval akkauntga kiring", "Please sign in first"), Toast.LENGTH_SHORT).show()
@@ -99,8 +101,16 @@ class CoachActivity : ComponentActivity() {
             addJavascriptInterface(object {
                 @android.webkit.JavascriptInterface
                 fun setLang(l: String) { HealthSync.setLang(this@CoachActivity, l, toServer = false) }
+                // Переключатели «Лёгкий режим» и «Экономное фото» на странице → запоминаем в приложении
+                @android.webkit.JavascriptInterface
+                fun setPref(key: String, v: String) { HealthSync.setPref(this@CoachActivity, key, v) }
             }, "NeonApp")
             webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, u: String) { loading.visibility = android.view.View.GONE }
+                // Главная страница не загрузилась (нет интернета, сервер не ответил) — экран «Нет связи»
+                override fun onReceivedError(view: WebView, request: WebResourceRequest, error: android.webkit.WebResourceError) {
+                    if (request.isForMainFrame) showOffline()
+                }
                 // Страницы Neon — внутри приложения, остальное (Telegram, YouTube…) — в своих приложениях
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                     val u = request.url
@@ -137,7 +147,9 @@ class CoachActivity : ComponentActivity() {
             }
         }
         // Android 15+: экран рисуется под строкой состояния — отступаем от системных панелей и клавиатуры
-        val box = android.widget.FrameLayout(this).apply { setBackgroundColor(Color.parseColor("#07070F")); addView(web) }
+        loading = loadingView()
+        offline = offlineView()
+        val box = android.widget.FrameLayout(this).apply { setBackgroundColor(Color.parseColor("#07070F")); addView(web); addView(loading); addView(offline) }
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(box) { v, ins ->
             val b = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.ime())
             v.setPadding(b.left, b.top, b.right, b.bottom)
@@ -148,7 +160,55 @@ class CoachActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (web.canGoBack()) web.goBack() else finish() }
         })
-        if (savedInstanceState == null) web.loadUrl(url) else web.restoreState(savedInstanceState)
+        if (savedInstanceState == null) web.loadUrl(url) else { web.restoreState(savedInstanceState); loading.visibility = android.view.View.GONE }
+    }
+
+    // ===== Загрузка и «Нет связи» (без них при слабом интернете был пустой тёмный экран) =====
+    private lateinit var loading: android.view.View
+    private lateinit var offline: android.view.View
+
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
+
+    /** Заставка: логотип и крутилка, пока страница грузится */
+    private fun loadingView() = android.widget.LinearLayout(this).apply {
+        orientation = android.widget.LinearLayout.VERTICAL; gravity = android.view.Gravity.CENTER
+        setBackgroundColor(Color.parseColor("#07070F"))
+        addView(android.widget.TextView(context).apply { text = "NEON"; textSize = 28f; letterSpacing = 0.3f; setTextColor(Color.WHITE); gravity = android.view.Gravity.CENTER })
+        addView(android.widget.ProgressBar(context).apply {
+            indeterminateTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#19E3FF"))
+            layoutParams = android.widget.LinearLayout.LayoutParams(dp(40), dp(40)).apply { topMargin = dp(24) }
+        })
+    }
+
+    /** «Нет связи»: понятный текст и большая кнопка «Повторить» */
+    private fun offlineView() = android.widget.LinearLayout(this).apply {
+        orientation = android.widget.LinearLayout.VERTICAL; gravity = android.view.Gravity.CENTER
+        setBackgroundColor(Color.parseColor("#07070F")); setPadding(dp(32), 0, dp(32), 0); visibility = android.view.View.GONE
+        addView(android.widget.TextView(context).apply { text = "📶"; textSize = 48f; gravity = android.view.Gravity.CENTER })
+        addView(android.widget.TextView(context).apply {
+            text = HealthSync.tr(this@CoachActivity, "Нет связи", "Aloqa yoʻq", "No connection"); textSize = 22f
+            setTextColor(Color.WHITE); gravity = android.view.Gravity.CENTER; setPadding(0, dp(12), 0, dp(8))
+        })
+        addView(android.widget.TextView(context).apply {
+            text = HealthSync.tr(this@CoachActivity, "Проверьте интернет и нажмите «Повторить».", "Internetni tekshiring va «Qayta urinish» ni bosing.", "Check your internet and tap “Try again”.")
+            textSize = 16f; setTextColor(Color.parseColor("#B8B6CF")); gravity = android.view.Gravity.CENTER
+        })
+        addView(android.widget.Button(context).apply {
+            text = HealthSync.tr(this@CoachActivity, "Повторить", "Qayta urinish", "Try again"); textSize = 17f; isAllCaps = false
+            setTextColor(Color.parseColor("#07070F"))
+            background = android.graphics.drawable.GradientDrawable().apply { cornerRadius = dp(16).toFloat(); setColor(Color.parseColor("#19E3FF")) }
+            layoutParams = android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.MATCH_PARENT, dp(56)).apply { topMargin = dp(28) }
+            setOnClickListener { retry() }
+        })
+    }
+
+    private fun showOffline() { loading.visibility = android.view.View.GONE; offline.visibility = android.view.View.VISIBLE }
+
+    /** «Повторить»: прячем «Нет связи», показываем заставку и грузим страницу заново */
+    private fun retry() {
+        offline.visibility = android.view.View.GONE; loading.visibility = android.view.View.VISIBLE
+        val u = HealthSync.appUrl(this, intent.getStringExtra(EXTRA_TAB) ?: "tech")
+        if (u != null) web.loadUrl(u) else web.reload()
     }
 
     override fun onSaveInstanceState(outState: Bundle) { super.onSaveInstanceState(outState); web.saveState(outState) }
