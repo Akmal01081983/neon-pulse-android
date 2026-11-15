@@ -104,6 +104,15 @@ class CoachActivity : ComponentActivity() {
                 // Переключатели «Лёгкий режим» и «Экономное фото» на странице → запоминаем в приложении
                 @android.webkit.JavascriptInterface
                 fun setPref(key: String, v: String) { HealthSync.setPref(this@CoachActivity, key, v) }
+                // «Спросить в своём ИИ»: системное окно «Поделиться» — ChatGPT, Gemini или любое другое приложение
+                @android.webkit.JavascriptInterface
+                fun shareText(text: String) {
+                    runOnUiThread {
+                        val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text.take(4000))
+                        try { startActivity(Intent.createChooser(send, HealthSync.tr(this@CoachActivity, "Спросить в своём ИИ", "Oʻz AI ingizdan soʻrash", "Ask your own AI"))) }
+                        catch (e: Exception) { Toast.makeText(this@CoachActivity, HealthSync.tr(this@CoachActivity, "Не нашлось приложения ИИ", "AI ilovasi topilmadi", "No AI app found"), Toast.LENGTH_SHORT).show() }
+                    }
+                }
             }, "NeonApp")
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, u: String) { loading.visibility = android.view.View.GONE }
