@@ -28,7 +28,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.reflect.KClass
 
-/** Чтение данных из Health Connect и отправка на сервер Neon Pulse (формат — приём Android в n8n, WF13). Telegram не нужен. */
+/** Чтение данных из Health Connect и отправка на сервер Neon Pulse (приём Android, WF13). Telegram не нужен. */
 object HealthSync {
     // Сервер берётся из сборки (переменная NP_SERVER_HOST в GitHub) — при переезде меняется без правки кода
     val HOST: String = BuildConfig.SERVER_HOST
@@ -59,7 +59,8 @@ object HealthSync {
     fun checkMinVersion(ctx: Context): Int {
         val r = call("GET", "$API/app-version")
         val min = r?.optInt("min", -1) ?: -1
-        if (min >= 0) prefs(ctx).edit().putInt("min_version", min).putString("apk_url", r?.optString("apk", "") ?: "").apply()
+        if (min >= 0) prefs(ctx).edit().putInt("min_version", min).putString("apk_url", r?.optString("apk", "") ?: "")
+            .putBoolean("gzip", r?.optBoolean("gzip", false) ?: false).apply() // сервер принимает сжатые данные
         return prefs(ctx).getInt("min_version", 0)
     }
     fun outdated(ctx: Context) = BuildConfig.VERSION_CODE < prefs(ctx).getInt("min_version", 0)
@@ -223,8 +224,13 @@ object HealthSync {
         if (!manual && local.hour < 12 && !sleptToday) { setStatus(ctx, tr(ctx, "Жду окончания сна", "Uyqu tugashini kutyapman", "Waiting for sleep to end") + " — ${local.toLocalTime().withNano(0)}"); return false }
 
         val body = JSONObject()
+        // Пульс: средний за каждую минуту вместо каждого замера (часы пишут до замера в секунду) — в разы меньше данных,
+        // сервер всё равно считает средние по часам и нижние 10% во сне
+        val hrRecs = readAll(c, HeartRateRecord::class, from, now)
         body.put("heart_rate", JSONArray().apply {
-            readAll(c, HeartRateRecord::class, from, now).forEach { r -> r.samples.forEach { s -> put(JSONObject().put("time", s.time.toString()).put("bpm", s.beatsPerMinute)) } }
+            hrRecs.flatMap { it.samples }.groupBy { it.time.epochSecond / 60 }.toSortedMap().forEach { (m, xs) ->
+                put(JSONObject().put("time", Instant.ofEpochSecond(m * 60).toString()).put("bpm", Math.round(xs.map { it.beatsPerMinute }.average())))
+            }
         })
         body.put("resting_heart_rate", JSONArray().apply {
             readAll(c, RestingHeartRateRecord::class, from, now).forEach { put(JSONObject().put("time", it.time.toString()).put("bpm", it.beatsPerMinute)) }
@@ -264,16 +270,30 @@ object HealthSync {
             readAll(c, BloodPressureRecord::class, from, now).forEach { put(JSONObject().put("time", it.time.toString()).put("systolic", it.systolic.inMillimetersOfMercury).put("diastolic", it.diastolic.inMillimetersOfMercury)) }
         })
 
+        // Самая поздняя запись (пульс, шаги, сон и др.). Ничего нового с прошлой удачной отправки — не шлём (кроме кнопки «Обновить»)
+        val newest = latestTime(body)
+        val sentNewest = prefs(ctx).getLong("sent_newest", 0)
+        if (!manual && newest in 1..sentNewest) {
+            setStatus(ctx, tr(ctx, "Новых данных нет", "Yangi maʼlumot yoʻq", "No new data") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
+            return true
+        }
+
         return try {
             val conn = URL("$SERVER?t=$token").openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.connectTimeout = 15000; conn.readTimeout = 30000
             conn.doOutput = true
             conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
-            conn.outputStream.use { it.write(body.toString().toByteArray()) }
+            val raw = body.toString().toByteArray()
+            // Сжатие gzip — в 5–10 раз меньше трафика; только если сервер сообщил, что принимает
+            if (prefs(ctx).getBoolean("gzip", false)) {
+                conn.setRequestProperty("Content-Encoding", "gzip")
+                java.util.zip.GZIPOutputStream(conn.outputStream).use { it.write(raw) }
+            } else conn.outputStream.use { it.write(raw) }
             val code = conn.responseCode
             conn.disconnect()
             val ok = code in 200..299
+            if (ok && newest > 0) prefs(ctx).edit().putLong("sent_newest", newest).apply()
             // Утром (ночь закончилась, данные ушли) — уведомление «Отчёт готов» прямо на телефон
             if (ok && !manual && local.hour < 12 && sleptToday) Notifier.morning(ctx)
             setStatus(ctx, (if (ok) tr(ctx, "✅ Отправлено", "✅ Yuborildi", "✅ Sent") else tr(ctx, "⚠️ Ошибка сервера", "⚠️ Server xatosi", "⚠️ Server error") + " $code") + " — ${local.toLocalDate()} ${local.toLocalTime().withNano(0)}")
@@ -282,5 +302,20 @@ object HealthSync {
             setStatus(ctx, tr(ctx, "⚠️ Нет интернета — повторю позже", "⚠️ Internet yoʻq — keyinroq qayta urinaman", "⚠️ No internet — will retry later"))
             false
         }
+    }
+
+    /** Время самой поздней записи в отправке (мс): по полям time / end_time / session_end_time; 0 — записей нет */
+    private fun latestTime(body: JSONObject): Long {
+        var max = 0L
+        for (k in body.keys()) {
+            val a = body.optJSONArray(k) ?: continue
+            for (i in 0 until a.length()) {
+                val o = a.optJSONObject(i) ?: continue
+                val t = o.optString("end_time").ifEmpty { o.optString("session_end_time").ifEmpty { o.optString("time") } }
+                val ms = runCatching { Instant.parse(t).toEpochMilli() }.getOrDefault(0L)
+                if (ms > max) max = ms
+            }
+        }
+        return max
     }
 }
